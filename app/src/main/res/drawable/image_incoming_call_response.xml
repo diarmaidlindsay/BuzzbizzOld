@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+
+
+<!-- ###################################################### -->
+<!-- 着信画面の応答ボタン 画像 -->
+<!-- ###################################################### -->
+
+
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+   <item
+       android:state_pressed="false"
+       android:drawable="@drawable/incoming_call_response"/>
+   <item
+       android:state_pressed="true"
+       android:drawable="@drawable/incoming_call_response_on" />
+</selector>

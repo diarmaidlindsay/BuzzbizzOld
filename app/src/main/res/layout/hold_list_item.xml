@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<!-- ###################################################### -->
+<!-- 保留リストアイテム -->
+<!-- ###################################################### -->
+
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hold_list__body_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/image_list_cell">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="6"
+        android:gravity="right"
+        android:orientation="horizontal">
+
+	    <TextView
+	        android:id="@+id/hold_list_caller_name"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="5"
+	        android:textSize="18sp"
+	        android:textColor="#000000"
+	        android:textIsSelectable="false"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/hold_list_responders_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textIsSelectable="false"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/hold_list_timer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textIsSelectable="false"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+</LinearLayout>

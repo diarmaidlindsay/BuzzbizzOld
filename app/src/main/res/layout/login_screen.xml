@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<!-- ###################################################### -->
+<!-- 設定画面 -->
+<!-- ###################################################### -->
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/haikei">
+
+	<ScrollView
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:fadeScrollbars="false"
+	    android:scrollbarThumbVertical="@drawable/scrollbar_thumbl">
+	    <requestFocus/>
+
+		<LinearLayout
+		    android:id="@+id/ls_main_layout"
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical">
+
+		    <RelativeLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="50dp">
+
+		        <View
+		            android:id="@+id/ls_point_1"
+		            android:layout_width="0dp"
+		            android:layout_height="0dp"
+		            android:layout_centerInParent="true"/>
+
+		        <Button
+		            android:id="@+id/btn_login"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_marginRight="15dp"
+		            android:layout_toLeftOf="@id/ls_point_1"
+		            android:background="@drawable/image_login"
+                    android:onClick="clickLoginButton"/>
+
+		        <Button
+		            android:id="@+id/btn_end_application"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_marginLeft="15dp"
+		            android:layout_toRightOf="@id/ls_point_1"
+		            android:background="@drawable/image_app_exit"
+                    android:onClick="clickEndApplicationButton"/>
+		    </RelativeLayout>
+
+
+
+
+
+		    <View
+		        android:layout_width="0dp"
+		        android:layout_height="100dp"/>
+
+
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:gravity="center_horizontal"
+		        android:weightSum="1">
+
+		        <Button
+		            android:id="@+id/btn_vpn_setting"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:background="@drawable/image_vpn_setting"
+                    android:onClick="clickVpnSettingButton"/>
+
+		        <View
+		            android:layout_width="0dp"
+		            android:layout_height="0dp"
+		            android:layout_weight="0.2"/>
+
+		        <Button
+		            android:id="@+id/btn_wifi_setting"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:background="@drawable/image_wifi_setting"
+                    android:onClick="clickWifiSettingButton"/>
+		    </LinearLayout>
+
+
+		    <View
+		        android:layout_width="0dp"
+		        android:layout_height="100dp" />
+
+
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginLeft="45dp"
+		        android:layout_marginRight="45dp"
+		        android:text="@string/login_title"
+		        android:textColor="#FFFFFF"
+		        android:textSize="30sp"
+		        android:textStyle="bold" />
+
+		    <TextView
+		        android:id="@+id/tv_username"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="20dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+		        android:text="@string/username"
+		        android:textColor="#FFFFFF" />
+		    <EditText
+		        android:id="@+id/et_username"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="3dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+			    android:paddingLeft="10dp"
+			    android:paddingRight="10dp"
+		        android:focusable="false"
+		        android:inputType="text"
+		        android:background="@drawable/setting_edittext">
+		        <requestFocus />
+		    </EditText>
+
+		    <TextView
+		        android:id="@+id/passwd"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+		        android:text="@string/password"
+		        android:textColor="#FFFFFF" />
+
+		    <EditText
+		        android:id="@+id/et_password"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="3dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+			    android:paddingLeft="10dp"
+			    android:paddingRight="10dp"
+		        android:focusable="false"
+		        android:inputType="text|textPassword"
+		        android:background="@drawable/setting_edittext" >
+		        <requestFocus />
+		    </EditText>
+
+		    <TextView
+		        android:id="@+id/tv_local_server"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+		        android:text="@string/LocalServer"
+		        android:textColor="#FFFFFF" />
+		    <EditText
+		        android:id="@+id/et_local_server"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="3dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+			    android:paddingLeft="10dp"
+			    android:paddingRight="10dp"
+		        android:focusable="false"
+		        android:inputType="text"
+		        android:background="@drawable/setting_edittext" >
+		        <requestFocus />
+		    </EditText>
+
+            <TextView
+                android:id="@+id/tv_ssid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:text="@string/SSID"
+                android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/et_ssid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:focusable="false"
+                android:inputType="text"
+                android:background="@drawable/setting_edittext" >
+                <requestFocus />
+            </EditText>
+
+            <TextView
+                android:id="@+id/tv_remote_server"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:text="@string/RemoteServer"
+                android:textColor="#FFFFFF" />
+            <EditText
+                android:id="@+id/et_remote_server"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:focusable="false"
+                android:inputType="text"
+                android:background="@drawable/setting_edittext" >
+                <requestFocus />
+            </EditText>
+
+
+
+
+            <!-- タブの設定 -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="50dp" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="45dp"
+                android:layout_marginRight="45dp"
+                android:text="@string/tabSetting"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+		    <TextView
+		        android:id="@+id/setting_tab_position_title_textview"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+		        android:text="@string/setting_tab_position_title"
+		        android:textColor="#FFFFFF"
+		        android:visibility="gone"/>
+
+
+		    <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:gravity="center_horizontal"
+                android:weightSum="1"
+                android:visibility="gone">
+
+                <ToggleButton
+                    android:id="@+id/tbtn_tab_position_normal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/image_tab_normal"
+                    android:textOff=""
+                    android:textOn="" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.2" />
+
+                <ToggleButton
+                    android:id="@+id/tbtn_tab_position_reversal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/image_tab_reversal"
+                    android:textOff=""
+                    android:textOn="" />
+            </LinearLayout>
+
+
+		    <TextView
+		        android:id="@+id/setting_tab_operation_title_textview"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="10dp"
+		        android:layout_marginLeft="45dp"
+			    android:layout_marginRight="45dp"
+		        android:text="@string/setting_tab_operation_title"
+		        android:textColor="#FFFFFF" />
+
+		    <LinearLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_marginTop="3dp"
+		        android:gravity="center_horizontal"
+		        android:weightSum="1"
+		        android:layout_marginBottom="50dp">
+
+		        <ToggleButton
+		            android:id="@+id/tbtn_tab_operation_tap"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:background="@drawable/image_tab_tap"
+		            android:textOff=""
+		            android:textOn="" />
+
+		        <View
+		            android:layout_width="0dp"
+		            android:layout_height="0dp"
+		            android:layout_weight="0.2" />
+
+		        <ToggleButton
+		            android:id="@+id/tbtn_tab_operation_frick"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:background="@drawable/image_tab_frick"
+		            android:textOff=""
+		            android:textOn="" />
+		    </LinearLayout>
+		</LinearLayout>
+	</ScrollView>
+</LinearLayout>

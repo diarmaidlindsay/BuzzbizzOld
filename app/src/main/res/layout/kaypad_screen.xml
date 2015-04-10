@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<!-- ###################################################### -->
+<!-- キーパッド 画面 -->
+<!-- ###################################################### -->
+
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF">
+
+    <View
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_weight="2"/>
+
+
+    <!-- 画面上段  -->
+    <FrameLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="0dip"
+	    android:layout_weight="75">
+
+        <LinearLayout
+            android:id="@+id/hide_kaypad_top_layout"
+            android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical" >
+
+	        <LinearLayout
+	            android:id="@+id/display_caller_imfo_layout"
+	            android:layout_width="match_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="32"
+	            android:gravity="bottom"
+		        android:orientation="vertical">
+
+
+	            <View
+	                android:layout_width="0dp"
+	                android:layout_height="0dp"
+	                android:layout_weight="1"/>
+
+	            <TextView
+	                android:id="@+id/display_caller_name_textview"
+	                android:layout_width="wrap_content"
+	                android:layout_height="0dp"
+	                android:layout_gravity="center"
+	                android:layout_weight="5"
+	                android:gravity="center"
+	                android:textSize="23sp"
+	                android:textStyle="bold"
+	                android:textColor="#898989"/>
+
+	            <View
+	                android:layout_width="0dp"
+	                android:layout_height="0dp"
+	                android:layout_weight="1"/>
+
+	            <TextView
+	                android:id="@+id/display_caller_timer"
+	                android:layout_width="wrap_content"
+	                android:layout_height="0dp"
+	                android:layout_gravity="center"
+	                android:layout_weight="5"
+	                android:textSize="40sp"
+	                android:textStyle="bold"
+	                android:textColor="#898989"/>
+	        </LinearLayout>
+
+
+		    <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="0dp"
+	            android:layout_weight="43"
+		        android:orientation="vertical" >
+
+			    <View
+	                android:layout_width="0dp"
+	                android:layout_height="0dp"
+	                android:layout_weight="6"/>
+
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="13"
+                    android:gravity="center"
+                    android:weightSum="40"
+		            android:orientation="horizontal" >
+
+		            <ToggleButton
+		                android:id="@+id/middle_mute_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="10"
+		                android:textOn=""
+		                android:textOff=""
+		                android:background="@drawable/image_middle_mute_button"/>
+
+		            <View
+	                    android:layout_width="0dp"
+	                    android:layout_height="0dp"
+	                    android:layout_weight="2"/>
+
+		            <Button
+		                android:id="@+id/display_kaypad_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="10"
+		                android:background="@drawable/image_display_kaypad_button"/>
+
+		            <View
+	                    android:layout_width="0dp"
+	                    android:layout_height="0dp"
+	                    android:layout_weight="2"/>
+
+		            <ToggleButton
+		                android:id="@+id/middle_speaker_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="10"
+		                android:textOn=""
+		                android:textOff=""
+		                android:background="@drawable/image_middle_speaker_button"/>
+	            </LinearLayout>
+
+	            <View
+	                android:layout_width="0dp"
+	                android:layout_height="0dp"
+	                android:layout_weight="25"/>
+	        </LinearLayout>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:id="@+id/with_kaypad_top_layout"
+            android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical" >
+
+		    <FrameLayout
+		        android:layout_width="match_parent"
+		        android:layout_height="0dip"
+		        android:layout_weight="27">
+
+			    <LinearLayout
+			        android:id="@+id/calling_kaypad_top_item"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:orientation="vertical" >
+
+
+			        <LinearLayout
+			            android:layout_width="match_parent"
+			            android:layout_height="0dp"
+			            android:layout_weight="15"
+                        android:gravity="center"
+                        android:weightSum="50"
+			            android:orientation="horizontal" >
+
+			            <ToggleButton
+			                android:id="@+id/top_mute_button"
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="20"
+			                android:textOn=""
+		                    android:textOff=""
+			                android:background="@drawable/image_top_mute_button"/>
+
+			            <View
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="2"/>
+
+			            <ToggleButton
+			                android:id="@+id/top_speaker_button"
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="20"
+			                android:textOn=""
+		                    android:textOff=""
+			                android:background="@drawable/image_top_speaker_button"/>
+			        </LinearLayout>
+
+
+			        <RelativeLayout
+				        android:layout_width="match_parent"
+				        android:layout_height="0dp"
+				        android:layout_weight="12">
+
+                        <TextView
+                            android:id="@+id/tel_numbers_display_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text=""
+                            android:textColor="#898989"
+                            android:textSize="40sp"
+                            android:textStyle="bold"
+                            android:scrollHorizontally="true"
+                            android:singleLine="true"
+                            android:ellipsize="start"
+                            android:background="@null"/>
+				    </RelativeLayout>
+			    </LinearLayout>
+
+
+
+			    <LinearLayout
+			        android:id="@+id/before_call_top_item"
+			        android:layout_width="match_parent"
+			        android:layout_height="match_parent"
+			        android:orientation="vertical" >
+
+			        <LinearLayout
+			            android:layout_width="match_parent"
+			            android:layout_height="0dp"
+			            android:layout_weight="15"
+			            android:gravity="center"
+                        android:weightSum="50"
+			            android:orientation="horizontal" >
+
+			            <Button
+			                android:id="@+id/change_tab_button"
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="20"
+			                android:background="@drawable/ks_change_tab_button_on"/>
+
+			            <View
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="2"/>
+
+			            <Button
+			                android:id="@+id/tel_num_backspace_button"
+			                android:layout_width="0dp"
+			                android:layout_height="match_parent"
+			                android:layout_weight="20"
+			                android:background="@drawable/image_tel_num_backspace_button"/>
+			        </LinearLayout>
+
+			        <RelativeLayout
+				        android:layout_width="match_parent"
+				        android:layout_height="0dp"
+				        android:layout_weight="14"
+				        android:layout_marginLeft="10dp"
+				        android:layout_marginRight="10dp">
+
+			            <TextView
+                            android:id="@+id/tel_numbers_input_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:text=""
+                            android:textColor="#898989"
+                            android:textSize="40sp"
+                            android:textStyle="bold"
+                            android:singleLine="true"
+                            android:scrollHorizontally="true"
+                            android:ellipsize="start"
+                            android:background="@null"/>
+			        </RelativeLayout>
+			    </LinearLayout>
+		    </FrameLayout>
+
+
+
+
+
+
+		    <LinearLayout
+		        android:id="@+id/num_kaypad"
+		        android:layout_width="match_parent"
+		        android:layout_height="0dp"
+		        android:layout_weight="60"
+		        android:orientation="vertical"
+		        android:baselineAligned="false">
+
+		        <!-- キーパッド 1から3 -->
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="10"
+                    android:gravity="center"
+                    android:weightSum="100"
+		            android:orientation="horizontal" >
+
+		            <Button
+		                android:id="@+id/num_one_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="1"
+		                android:background="@drawable/image_num_one_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_two_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="2"
+		                android:background="@drawable/image_num_two_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_three_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="3"
+		                android:background="@drawable/image_num_three_button"/>
+		        </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <!-- キーパッド 4から6 -->
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="10"
+                    android:gravity="center"
+                    android:weightSum="100"
+		            android:orientation="horizontal" >
+
+		            <Button
+		                android:id="@+id/num_four_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="4"
+		                android:background="@drawable/image_num_four_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_five_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="5"
+		                android:background="@drawable/image_num_five_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_six_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="6"
+		                android:background="@drawable/image_num_six_button"/>
+		        </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <!-- キーパッド 7から9 -->
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="10"
+                    android:gravity="center"
+                    android:weightSum="100"
+		            android:orientation="horizontal" >
+
+		            <Button
+		                android:id="@+id/num_seven_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="7"
+		                android:background="@drawable/image_num_seven_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_eight_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="8"
+		                android:background="@drawable/image_num_eight_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_nine_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="9"
+		                android:background="@drawable/image_num_nine_button"/>
+		        </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <!-- キーパッド *から# -->
+		        <LinearLayout
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="10"
+                    android:gravity="center"
+                    android:weightSum="100"
+		            android:orientation="horizontal" >
+
+		            <Button
+		                android:id="@+id/num_kome_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="*"
+		                android:background="@drawable/image_num_kome_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_zero_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="0"
+		                android:background="@drawable/image_num_zero_button"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="6"/>
+
+		            <Button
+		                android:id="@+id/num_sharp_button"
+		                android:layout_width="0dp"
+		                android:layout_height="match_parent"
+		                android:layout_weight="24"
+		                android:tag="#"
+		                android:background="@drawable/image_num_sharp_button"/>
+		        </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+		    </LinearLayout>
+		</LinearLayout>
+	</FrameLayout>
+
+
+
+
+
+	<!-- 画面下段  -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="14">
+
+
+        <LinearLayout
+            android:id="@+id/calling_under"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:weightSum="50"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/calling_hold_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:background="@drawable/image_calling_hold"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2" />
+
+            <Button
+                android:id="@+id/calling_hangup_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="20"
+                android:background="@drawable/image_calling_hangup"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8" />
+
+            <Button
+                android:id="@+id/num_call_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                 android:layout_weight="54"
+                android:background="@drawable/image_num_call_button" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="6" />
+
+            <Button
+            	android:id="@+id/btn_move_tel_list"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="24"
+                android:background="@drawable/move_tel_directory"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="8" />
+        </LinearLayout>
+	</FrameLayout>
+
+    <View
+		android:layout_width="0dp"
+		android:layout_height="0dp"
+		android:layout_weight="2"/>
+</LinearLayout>

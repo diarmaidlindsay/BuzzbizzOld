@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+
+<!-- ###################################################### -->
+<!-- 着信 画面 -->
+<!-- ###################################################### -->
+
+
+
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="90"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/incoming_call_background">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="62"
+        android:weightSum="50"
+        android:gravity="center"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <ListView
+            android:id="@+id/incoming_call_list"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="45"
+            android:choiceMode="singleChoice"
+            android:divider="@drawable/list_item_divider"/>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="5"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="13"
+        android:gravity="center"
+        android:weightSum="50"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/reject_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="42"
+            android:src="@drawable/image_incoming_call_refusal"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/reject"
+            android:onClick="clickBtnReject"/>
+    </LinearLayout>
+</LinearLayout>

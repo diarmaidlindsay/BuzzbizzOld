@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Buzbiz</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="hold_screen_title">保留リスト 画面</string>
+    <string name="external_tel_screen_title">外線表 画面</string>
+    <string name="keypad_screen_title">キーパッド 画面</string>
+    <string name="internal_tel_screen_title">内線表 画面</string>
+
+
+    <string name="hold_button_title">保留ボタン</string>
+    <string name="hangup_button_title">切断</string>
+
+
+    <string name="serch_hint">検索</string>
+
+
+    <string name="username">ユーザ名</string>
+    <string name="password">パスワード</string>
+    <string name="SSID">無線LAN SSID</string>
+    <string name="LocalServer">ローカルサーバ</string>
+    <string name="RemoteServer">リモートサーバ</string>
+    <string name="register">ログイン</string>
+    <string name="unregister">ログアウト</string>
+    <string name="registed">通話可能</string>
+    <string name="not_reg">ログアウト</string>
+    <string name="tabSetting">タブ設定</string>
+
+
+    <string name="setting_tab_position_title">タブの位置</string>
+    <string name="setting_tab_operation_title">タブの操作方法</string>
+
+    <string name="login_title">ログイン設定</string>
+
+
+
+    <!-- 保留リスト -->
+    <string name="hold_title">保留リスト</string>
+    <string name="hold_list_empty">保留なし</string>
+
+
+
+    <!-- 外線帳 -->
+    <string name="external_table_title">外線リスト</string>
+
+
+
+    <!-- 内線帳 -->
+    <string name="internal_table_title">内線リスト</string>
+
+
+
+    <!-- 履歴リスト -->
+    <string name="history_title">履歴リスト</string>
+
+
+
+    <!-- 着信画面 -->
+    <string name="answer">応答</string>
+    <string name="reject">拒否</string>
+
+
+
+    <!-- URL -->
+    <string name="cert_url">https://%s/ca/android/cert.bks</string>
+    <string name="licence_key_url">https://%s/address/license_android.txt</string>
+    <string name="login_url">https://%s/address/login.php</string>
+    <string name="callcheck_url">https://%s/address/callcheck.php</string>
+    <string name="internaltel_url">https://%s/address/inline.php</string>
+    <string name="externaltel_url">https://%s/address/outline.php</string>
+    <string name="hold_url">https://%s/address/hold.php</string>
+    <string name="history_url">https://%s/address/history.php</string>
+    <string name="name_serch_url">https://%s/address/get_incoming_info.php</string>
+    <string name="check_login_status_url">https://%s/address/check_status.php</string>
+    <string name="push_registe_url">https://%s/address/add_endpoint.php</string>
+    <string name="logout_url">https://%s/address/logout.php</string>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

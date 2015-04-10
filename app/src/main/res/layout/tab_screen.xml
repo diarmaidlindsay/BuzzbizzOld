@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<!-- ###################################################### -->
+<!-- タブ用 画面 -->
+<!-- ###################################################### -->
+
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_screen_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#00000000" >
+
+    <LinearLayout
+        android:id="@+id/tab_screen_right_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="19"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="22"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_to_hold"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="18"
+            android:background="@drawable/image_button_to_hold"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_to_ex"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="18"
+            android:background="@drawable/image_button_to_ex"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_to_in"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="18"
+            android:background="@drawable/image_button_to_in"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:text="" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="62"
+        android:text="" />
+
+    <LinearLayout
+        android:id="@+id/tab_screen_left_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="19"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="35"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_to_key"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="18"
+            android:background="@drawable/image_button_to_key"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:text="" />
+
+        <Button
+            android:id="@+id/button_to_hst"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="18"
+            android:background="@drawable/image_button_to_hst"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="19"
+            android:text="" />
+    </LinearLayout>
+</LinearLayout>

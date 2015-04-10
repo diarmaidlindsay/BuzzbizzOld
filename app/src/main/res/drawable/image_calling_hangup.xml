@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+
+
+<!-- ###################################################### -->
+<!-- 通話中の切断ボタン 画像 -->
+<!-- ###################################################### -->
+
+
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+   <item
+       android:state_pressed="false"
+       android:drawable="@drawable/ks_calling_hangup"/>
+   <item
+       android:state_pressed="true"
+       android:drawable="@drawable/ks_calling_hangup_on" />
+</selector>

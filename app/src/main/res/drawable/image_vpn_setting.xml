@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+
+
+<!-- ###################################################### -->
+<!-- VPN設定へ遷移用ボタン 画像 -->
+<!-- ###################################################### -->
+
+
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+   <item
+       android:state_pressed="false"
+       android:drawable="@drawable/vpn_setting"/>
+   <item
+       android:state_pressed="true"
+       android:drawable="@drawable/vpn_setting_on" />
+</selector>

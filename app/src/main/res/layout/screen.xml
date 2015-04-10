@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!-- キーパッド 画面 -->
+    <include
+        android:id="@+id/history_screen_layout"
+        layout="@layout/history_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <!-- 外線表 画面 -->
+    <include
+        android:id="@+id/external_table_screen_layout"
+        layout="@layout/external_table_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+    <!-- キーパッド 画面 -->
+    <include
+        android:id="@+id/keypad_screen_layout"
+        layout="@layout/kaypad_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+
+    <!-- 内線表 画面 -->
+    <include
+        android:id="@+id/internal_table_screen_layout"
+        layout="@layout/internal_table_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <!-- 保留 画面 -->
+    <include
+        android:id="@+id/hold_screen_layout"
+        layout="@layout/hold_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <!-- 表紙 -->
+    <View
+        android:id="@+id/cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/cover"/>
+
+
+
+    <!-- 反転したタブ 画面 -->
+    <include
+        android:id="@+id/include_reverse_tab"
+        layout="@layout/tab_screen_reverse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <!-- タブ 画面 -->
+    <include
+        android:id="@+id/include_tab"
+        layout="@layout/tab_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

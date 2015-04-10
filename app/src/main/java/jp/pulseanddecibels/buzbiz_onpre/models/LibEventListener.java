@@ -1,0 +1,79 @@
+package jp.pulseanddecibels.buzbiz_onpre.models;
+
+/**
+ *
+ * Vax のイベント取得用インターフェース
+ *
+ * @author 普天間
+ *
+ */
+public interface LibEventListener {
+	// ///////////////////////////////////////// EVENTS
+	// ////////////////////////////////////////////////////////////////////////////////////
+
+	public void OnSuccessToRegister();
+	public void OnSuccessToReRegister() ;
+	public void OnSuccessToUnRegister();
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnTryingToRegister() ;
+	public void OnTryingToReRegister() ;
+	public void OnTryingToUnRegister() ;
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnFailToRegister(int nStatusCode, String sReasonPhrase);
+	public void OnFailToReRegister(int nStatusCode, String sReasonPhrase);
+	public void OnFailToUnRegister(int nStatusCode, String sReasonPhrase) ;
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnDialing(int nLineNo);
+	public void OnAccepting(int nLineNo);
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnEndCall(int nLineNo);
+	public void OnConnecting(int nLineNo);
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnTryingToHold(int nLineNo);
+	public void OnTryingToUnHold(int nLineNo);
+	public void OnFailToHold(int nLineNo);
+	public void OnFailToUnHold(int nLineNo);
+	public void OnSuccessToHold(int nLineNo);
+	public void OnSuccessToUnHold(int nLineNo);
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnFailToConnect(int nLineNo);
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnIncomingCall(String sCallId, String sDisplayName,
+                               String sUserName, String sFromURI, String sToURI);
+	public void OnIncomingCallRingingStart(String sCallId) ;
+	public void OnIncomingCallRingingStop(String sCallId);
+
+	// ///////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////////////////////////////////////////////
+
+	public void OnConnected(int nLineNo, String sTxRTPIP, int nTxRTPPort, String sCallId);
+	public void OnProvisionalResponse(int nLineNo, int nStatusCode, String sReasonPharase) ;
+	public void OnFailureResponse(int nLineNo, int nStatusCode, String sReasonPharase) ;
+	public void OnRedirectResponse(int nLineNo, int nStatusCode, String sReasonPharase, String sContact) ;
+	public void OnDisconnectCall(int nLineNo) ;
+	public void OnCallTransferAccepted(int nLineNo) ;
+	public void OnFailToTransfer(int nLineNo, int nStatusCode, String sReasonPharase) ;
+	public void OnIncomingDiagnostic(String sMsgSIP, String sFromIP, int nFromPort) ;
+	public void OnOutgoingDiagnostic(String sMsgSIP, String sToIP, int nToPort);
+}

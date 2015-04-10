@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<!-- ###################################################### -->
+<!-- メイン画面のroot -->
+<!-- ###################################################### -->
+
+
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:baselineAligned="false">
+
+        <ImageView
+            android:id="@+id/dummy_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="95"
+            android:contentDescription="@string/app_name" />
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/gl_plus_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 動的にOpenGLを追加する為、ここにダミーのSurfaceViewを配置し、ちらつきを防ぐ -->
+        <SurfaceView
+            android:layout_width="match_parent"
+            android:layout_height="0px" >
+        </SurfaceView>
+    </FrameLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="7dp"
+        android:layout_marginTop="7dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:baselineAligned="false">
+
+        <ViewFlipper
+            android:id="@+id/viewflipper"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="95">
+
+            <jp.pulseanddecibels.buzbiz_onpre.MyFrameLayout
+                android:id="@+id/first_screen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <jp.pulseanddecibels.buzbiz_onpre.TagFrameLayout
+                android:id="@+id/second_screen"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ViewFlipper>
+    </LinearLayout>
+
+
+    <!-- 枠 -->
+    <ViewSwitcher
+        android:id="@+id/vs_waku"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inAnimation="@android:anim/fade_in"
+        android:outAnimation="@android:anim/fade_out">
+            <View
+                android:id="@+id/waku2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/waku2"/>
+
+            <View
+                android:id="@+id/waku1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/waku"/>
+    </ViewSwitcher>
+</FrameLayout>
