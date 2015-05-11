@@ -107,7 +107,6 @@ public class HoldScreen {
                 public void run() {
                     final ArrayList<HoldListItem> parcedArray;
                     try{
-                        Logger.e(response);
                         String json = response.toString();
                         parcedArray = jsonParser.parceJsonForHoldList(json);
                     }catch (Exception ex){

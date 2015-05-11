@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.pulseanddecibels.buzbiz_onpre" >
-
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -24,18 +19,18 @@
     <permission
         android:name="jp.pulseanddecibels.buzbiz_onpre.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="jp.pulseanddecibels.buzbiz.permission.C2D_MESSAGE" />
     <uses-permission android:name="jp.pulseanddecibels.buzbiz.c2dm.permission.RECEIVE" />
 
-
-
     <application
-        android:name="jp.pulseanddecibels.buzbiz_onpre.BuzbizApplication"
+        android:name=".BuzbizApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/buzbiz_icon"
         android:label="@string/app_name"
-        android:theme="@style/my_activity_theme"
-        android:hardwareAccelerated="true" >
+        android:theme="@style/my_activity_theme" >
+
         <!-- アプリに割り当てられるヒープ領域を拡大   (10以降) -->
         <!-- 高速化の為、背景の塗りつぶしなしの自作テーマを適用 -->
 
@@ -43,61 +38,62 @@
             android:name="io.fabric.ApiKey"
             android:value="4e56e637a6dc71acfa12391a5b8aa209d438ce34" />
 
-
-
         <!-- スプラッシュ画面 -->
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" >
+
             <!-- android:screenOrientation : 画面の向きは縦で固定 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
         <!-- メイン画面 -->
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"/>
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- ログイン画面 -->
         <activity
             android:name=".LoginActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan"/>
-
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- 着信画面 -->
         <activity
             android:name=".IncomingCallActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"/>
-
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
 
         <!-- メインサービス -->
-        <service android:name=".MainService"/>
-
-
+        <service android:name=".MainService" />
 
         <receiver
             android:name=".GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="jp.pulseanddecibels.buzbiz" />
             </intent-filter>
         </receiver>
 
-
         <service android:name=".GcmIntentService" />
+
+        <!-- コーデック設定画面 -->
+        <activity
+            android:name=".CodecSettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
     </application>
+
 </manifest>

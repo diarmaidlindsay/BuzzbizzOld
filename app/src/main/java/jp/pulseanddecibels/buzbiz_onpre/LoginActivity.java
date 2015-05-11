@@ -406,6 +406,17 @@ public class LoginActivity
 
 
 
+    /*
+     * TODO test
+     */
+    public void clickSSSS(View view) {
+        startActivity(new Intent(this, CodecSettingActivity.class));
+    }
+
+
+
+
+
     /**
      * タブ設定用トグルボタン選択時の操作
      */

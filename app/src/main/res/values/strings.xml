@@ -55,6 +55,7 @@
 
     <!-- 履歴リスト -->
     <string name="history_title">履歴リスト</string>
+    <string name="mark">発信・着信マーク</string>
 
 
 
@@ -82,4 +83,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="transparent">#00000000</color>
+    <string name="title_activity_codec_setting">CodecSettingActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

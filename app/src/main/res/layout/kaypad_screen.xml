@@ -546,12 +546,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="6" />
 
-            <Button
+            <ImageButton
             	android:id="@+id/btn_move_tel_list"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="24"
-                android:background="@drawable/move_tel_directory"/>
+                android:src="@drawable/image_move_tel_directory"
+                android:background="@null"/>
 
             <View
                 android:layout_width="0dp"

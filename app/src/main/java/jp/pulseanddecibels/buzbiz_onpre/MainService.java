@@ -10,6 +10,7 @@ import jp.pulseanddecibels.buzbiz_onpre.models.LibOperator;
 import jp.pulseanddecibels.buzbiz_onpre.models.LoginChecker;
 import jp.pulseanddecibels.buzbiz_onpre.models.File;
 import jp.pulseanddecibels.buzbiz_onpre.models.ProximitySensorControl;
+import jp.pulseanddecibels.buzbiz_onpre.models.Setting;
 import jp.pulseanddecibels.buzbiz_onpre.models.SoundPlayer;
 import jp.pulseanddecibels.buzbiz_onpre.models.VibratorControl;
 import jp.pulseanddecibels.buzbiz_onpre.models.VolleyOperator;
@@ -438,24 +439,6 @@ public class MainService extends Service {
 
 		return true;
 	}
-
-
-
-
-
-	/**
-	 * SIPサーバのIPを取得
-	 * @return
-	 */
-	public static String getSipServerIp() {
-		if (TextUtils.isEmpty(sipServerDomain)) {
-			sipServerDomain = File.getValue(me.getApplicationContext(), File.LOGIN_SUCCESS_SERVER_IP);
-		}
-
-		return sipServerDomain;
-	}
-	/** BUZBIZで使用するSipサーバのドメイン */
-	private static String sipServerDomain = Util.STRING_EMPTY;
 
 
 

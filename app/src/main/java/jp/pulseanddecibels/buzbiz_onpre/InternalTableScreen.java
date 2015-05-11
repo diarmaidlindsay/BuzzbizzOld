@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import jp.pulseanddecibels.buzbiz_onpre.data.TelNumber;
 import jp.pulseanddecibels.buzbiz_onpre.models.JsonParser;
 import jp.pulseanddecibels.buzbiz_onpre.models.VolleyOperator;
+import jp.pulseanddecibels.buzbiz_onpre.util.Logger;
 import jp.pulseanddecibels.buzbiz_onpre.util.Util;
 
 import android.app.Activity;
@@ -170,6 +171,7 @@ public class InternalTableScreen {
 			final String callerName = item.getUserName();
 
 
+
 			// 電話番号が設定されていない時は、
 			if(telNum.isEmpty()){
 				AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -280,7 +282,7 @@ public class InternalTableScreen {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    ArrayList<InternalTelListItem> parcedArray;
+					ArrayList<InternalTelListItem> parcedArray;
                     try{
                         String json = response.toString();
                         parcedArray = jsonParser.parceJsonForInternalTable(json);

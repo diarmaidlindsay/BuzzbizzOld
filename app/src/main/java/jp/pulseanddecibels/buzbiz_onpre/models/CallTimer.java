@@ -18,7 +18,6 @@ import jp.pulseanddecibels.buzbiz_onpre.MainService;
 public class CallTimer {
 //	/** タイマー */
 //	private static Timer timer = null;
-
 	private static long startTime;
 	private static long callTime;
 

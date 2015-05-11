@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class KaypadScreen {
 	private final ViewGroup Kaypad;
 	// 画面下部
 	private final Button beforeCallUnder;
-	private final Button moveTelListButtonUnder;
+	private final ImageButton moveTelListButtonUnder;
 	private final ViewGroup callingUnder;
 
 
@@ -123,11 +124,11 @@ public class KaypadScreen {
 		beforeCallUnder.setOnClickListener(callClickListener);
 
 		// 電話帳参照ボタン
-		moveTelListButtonUnder	= (Button)myFrameLayout.findViewById(R.id.btn_move_tel_list);
+		moveTelListButtonUnder	= (ImageButton)myFrameLayout.findViewById(R.id.btn_move_tel_list);
 		moveTelListButtonUnder.setOnClickListener(moveTelListButtonClickListener);
 
-				// 各設定ボタンの設定
-				myFrameLayout.findViewById(R.id.display_kaypad_button).setOnClickListener(displayKaypadClickListener);
+		// 各設定ボタンの設定
+		myFrameLayout.findViewById(R.id.display_kaypad_button).setOnClickListener(displayKaypadClickListener);
 		muteButton = (ToggleButton)myFrameLayout.findViewById(R.id.middle_mute_button);
 		muteButton.setOnCheckedChangeListener(muteCheckedChangeListener);
 		topMuteButton = (ToggleButton)myFrameLayout.findViewById(R.id.top_mute_button);

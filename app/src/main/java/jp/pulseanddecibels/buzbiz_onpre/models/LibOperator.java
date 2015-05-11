@@ -4,6 +4,8 @@ import jp.pulseanddecibels.buzbiz_onpre.MainService;
 import jp.pulseanddecibels.buzbiz_onpre.R;
 import jp.pulseanddecibels.buzbiz_onpre.data.DtmfCode;
 import jp.pulseanddecibels.buzbiz_onpre.data.TelNumber;
+import jp.pulseanddecibels.buzbiz_onpre.util.Logger;
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
@@ -41,45 +43,75 @@ public class LibOperator {
 
 
 
-	/**
-	 * ライブラリーの初期化
-	 */
-	public void initVax(Context context) {
-        VAX.DeselectAllVoiceCodec();
+//	/**
+//	 * ライブラリーの初期化
+//	 */
+//	public void initVax(Context context) {
+//        VAX.DeselectAllVoiceCodec();
+//
+//        // 各コーデックの設定
+//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711U_CodecNo);
+//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711A_CodecNo);
+//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.Opus_CodecNo);
+//
+//        // ---------------------------------------------------------
+//        // 注意
+//        //   コーデックを通信キャリアで分ける
+//        //   (softbankではVoIPが通信速度制限されるため)
+//        //
+//        //     softbank : iLBC
+//        //     その他   : GSM
+//        // ---------------------------------------------------------
+//        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//        if (tm.getSimOperator().equals("44020")) {
+//            VAX.SetVoiceCodec(true, VaxSIPUserAgent.iLBC_CodecNo);
+//            VAX.SetVoiceCodec(false, VaxSIPUserAgent.GSM_CodecNo);
+//        } else {
+//            VAX.SetVoiceCodec(false, VaxSIPUserAgent.iLBC_CodecNo);
+//            VAX.SetVoiceCodec(true, VaxSIPUserAgent.GSM_CodecNo);
+//        }
+//
+//        // エコーキャンセラー
+//        VAX.SetEchoCancellation(true);
+//
+//        VAX.SpkSetSoftBoost(true);
+//        VAX.SpkSetAutoGain(2); // 2以外だと音質が悪くなる
+//
+//        VAX.MicSetSoftBoost(true);
+//        VAX.MicSetAutoGain(2); // 2以外だと音質が悪くなる
+//
+//        VAX.EnableKeepAlive(10);
+//    }
+
+
+
+
+
+    /**
+     * ライブラリーの初期化
+     */
+    public void initVax(Context context) {
+        Setting setting = new Setting();
 
         // 各コーデックの設定
-        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711U_CodecNo);
+        VAX.SetVoiceCodec(setting.loadG711U(context), VaxSIPUserAgent.G711U_CodecNo);
         VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711A_CodecNo);
-        VAX.SetVoiceCodec(false, VaxSIPUserAgent.Opus_CodecNo);
-
-        // ---------------------------------------------------------
-        // 注意
-        //   コーデックを通信キャリアで分ける
-        //   (softbankではVoIPが通信速度制限されるため)
-        //
-        //     softbank : iLBC
-        //     その他   : GSM
-        // ---------------------------------------------------------
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        if (tm.getSimOperator().equals("44020")) {
-            VAX.SetVoiceCodec(true, VaxSIPUserAgent.iLBC_CodecNo);
-            VAX.SetVoiceCodec(false, VaxSIPUserAgent.GSM_CodecNo);
-        } else {
-            VAX.SetVoiceCodec(false, VaxSIPUserAgent.iLBC_CodecNo);
-            VAX.SetVoiceCodec(true, VaxSIPUserAgent.GSM_CodecNo);
-        }
-
+        VAX.SetVoiceCodec(setting.loadOpus(context),  VaxSIPUserAgent.Opus_CodecNo);
+        VAX.SetVoiceCodec(setting.loadIlbc(context),  VaxSIPUserAgent.iLBC_CodecNo);
+        VAX.SetVoiceCodec(setting.loadGSM(context),   VaxSIPUserAgent.GSM_CodecNo);
 
         // エコーキャンセラー
         VAX.SetEchoCancellation(true);
 
-        VAX.SpkSetSoftBoost(true);
-        VAX.SpkSetAutoGain(2); // 2以外だと音質が悪くなる
+        // スピーカー
+        VAX.SpkSetSoftBoost(setting.loadSpkSoftBoost(context));
+        VAX.SpkSetAutoGain(setting.loadSpkAutoGain(context));
 
-        VAX.MicSetSoftBoost(true);
-        VAX.MicSetAutoGain(2); // 2以外だと音質が悪くなる
+        // マイク
+        VAX.MicSetSoftBoost(setting.loadMicSoftBoost(context));
+        VAX.MicSetAutoGain(setting.loadMicAutoGain(context));
 
-        VAX.EnableKeepAlive(10);
+        VAX.EnableKeepAlive(30);
     }
 
 

@@ -18,17 +18,6 @@ public class File {
 
 
 
-	// ログイン成功時に保存する各値のキー
-	public static final String LOGIN_SUCCESS_BUZBIZ_NAME		= "LOGIN_SUCCESS_BUZBIZ_NAME";
-	public static final String LOGIN_SUCCESS_BUZBIZ_SIPPASSWORD	= "LOGIN_SUCCESS_BUZBIZ_SIPPASSWORD";
-	public static final String LOGIN_SUCCESS_SIP_GROUP_NAME		= "LOGIN_SUCCESS_SIP_GROUP_NAME";
-	public static final String LOGIN_SUCCESS_SIP_NAME			= "LOGIN_SUCCESS_SIP_NAME";
-	public static final String LOGIN_SUCCESS_SIP_SIPPASSWORD	= "LOGIN_SUCCESS_SIP_SIPPASSWORD";
-	public static final String LOGIN_SUCCESS_SERVER_IP			= "LOGIN_SUCCESS_SERVER_IP";
-	public static final String LOGIN_SUCCESS_LOCAL_PORT			= "LOGIN_SUCCESS_LOCAL_PORT";
-	public static final String LOGIN_SUCCESS_USER_DOMAIN		= "LOGIN_SUCCESS_USER_DOMAIN";
-
-
 	public static final String TAB_POSITION		= "TAB_POSITION";
 	public static final String TAB_OPERATION	= "TAB_OPERATION";
 
