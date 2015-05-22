@@ -41,7 +41,7 @@ dependencies {
     // Butter Knife
     compile 'com.jakewharton:butterknife:6.1.0'
 
-    // pushh通知
+    // push通知
     compile 'com.google.android.gms:play-services:4.1.+'
 
     // crashlytics

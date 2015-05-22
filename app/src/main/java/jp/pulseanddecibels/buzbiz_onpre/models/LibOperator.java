@@ -91,6 +91,8 @@ public class LibOperator {
      * ライブラリーの初期化
      */
     public void initVax(Context context) {
+        VAX.DeselectAllVoiceCodec();
+
         Setting setting = new Setting();
 
         // 各コーデックの設定
@@ -111,7 +113,7 @@ public class LibOperator {
         VAX.MicSetSoftBoost(setting.loadMicSoftBoost(context));
         VAX.MicSetAutoGain(setting.loadMicAutoGain(context));
 
-        VAX.EnableKeepAlive(30);
+        VAX.EnableKeepAlive(10);
     }
 
 

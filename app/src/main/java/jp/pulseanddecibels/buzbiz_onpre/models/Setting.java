@@ -555,9 +555,7 @@ public class Setting {
      */
     public boolean loadIlbc(Context context) {
         int value = File.getInt(context, TAG_ILBC);
-
-        // iLBCのみデフォルトはONとする
-        return checkOnOff_DefaultOn(value);
+        return checkOnOff_DefaultOff(value);
     }
 
 
@@ -571,7 +569,9 @@ public class Setting {
      */
     public boolean loadGSM(Context context) {
         int value = File.getInt(context, TAG_GSM);
-        return checkOnOff_DefaultOff(value);
+
+        // GSMのみデフォルトはONとする
+        return checkOnOff_DefaultOn(value);
     }
 
 
