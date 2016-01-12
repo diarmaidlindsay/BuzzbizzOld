@@ -1,9 +1,24 @@
 package com.vax.dev.lib;
 
-import jp.pulseanddecibels.buzbiz_onpre.models.LibEventListener;
+import android.util.Log;
 
+import jp.pulseanddecibels.buzbiz.models.LibEventListener;
+
+//Vaxの制御クラスを継承、リスナー
 public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 {
+	final LibEventListener buzbiz_listener;
+
+	// TODO 追加
+	public boolean reLogin(){
+		return RegisterToProxy(1800);
+	}
+
+	public void CloseMic()
+	{
+		m_objMediaMic.CloseMic();
+	}
+
 	public static final int TOTAL_LINE_COUNT = 5;
 
 	public static final int G711U_CodecNo = 0;
@@ -12,13 +27,12 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	public static final int iLBC_CodecNo = 3;
 	public static final int Opus_CodecNo = 4;
 
-	final SocketSIP m_objSocketSIP = new SocketSIP(this);
-	final SocketRTP m_objSocketRTP = new SocketRTP(this);
+	SocketSIP m_objSocketSIP = new SocketSIP(this);
 
-	final MediaMic m_objMediaMic = new MediaMic(this);
-	final MediaSPK m_objMediaSpk = new MediaSPK(this);
+	MediaMic m_objMediaMic = new MediaMic(this);
+	MediaSPK m_objMediaSpk = new MediaSPK();
 
-	final TimerTick m_objTimerTick = new TimerTick(this);
+//	TimerTick m_objTimerTick = new TimerTick(this);
 	SocketRTP[] m_aSocketRTP = null;
 
 	boolean m_bOnline = false;
@@ -28,17 +42,26 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	boolean m_bDonotDisturb = false;
 	boolean m_bIsSprakerOn = false;
 
-	final boolean m_aBusyStatus[] = new boolean[TOTAL_LINE_COUNT]; //// the default value is false
+	boolean m_aBusyStatus[] = new boolean[TOTAL_LINE_COUNT]; // the default value is false
 
 	int m_nLocalPortSIP = 5060;
-//	int m_nLocalPortRTP = 7000;
-	int m_nLocalPortRTP = 5004;
+//int m_nLocalPortSIP = 56131;
+	int m_nLocalPortRTP = 4000;
+	//rtp.conf->rtpstart=5000 rtpend=20000
+	//ビジホの声だけスマホに届く場合は20秒で切られる
+	//2038はビジホの声だけスマホに届く
+	//5004はビジホの声だけスマホに届く
+	//7000だと双方聞こえない->furunowifが原因?
+	//9000はビジホの声だけスマホに届く
+	//1100はビジホの声だけスマホに届く
+	//19000はビジホの声だけスマホに届く
+	// iphonが1100のため変更20151126
+//	int m_nLocalPortRTP = 5004;//元祖
+//int m_nLocalPortRTP = 10010;
 
-	final LibEventListener listener;
-
-	public VaxSIPUserAgent(LibEventListener listener)
+public VaxSIPUserAgent(LibEventListener objVaxThread)
 	{
-		this.listener = listener;
+		buzbiz_listener = objVaxThread;
 	}
 
 	@Override
@@ -50,7 +73,6 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 		{
 			m_aSocketRTP = new SocketRTP[nTotalLine];
 		}
-
 		return bResult;
 	}
 
@@ -76,7 +98,13 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	@Override
 	public boolean RegisterToProxy(int nExpire)
 	{
-		return super.RegisterToProxy(nExpire);
+		if(!super.RegisterToProxy(nExpire))
+		{
+			return false;
+		}
+
+		OnTryingToRegister();
+		return true;
 	}
 
 	@Override
@@ -86,9 +114,8 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public boolean DialCall(int nLineNo, String sDialNo, int nInputDeviceId, int nOutputDeviceId)
-	{
-		if(!super.DialCall(nLineNo, sDialNo, nInputDeviceId, nOutputDeviceId))
+	public boolean DialCall(int nLineNo, String sDialNo, int nInputDeviceId, int nOutputDeviceId) {
+		if (!super.DialCall(nLineNo, sDialNo, nInputDeviceId, nOutputDeviceId))
 			return false;
 
 		OnDialing(nLineNo);
@@ -96,10 +123,8 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public boolean Connect(int nLineNo, String sToURI, int nInputDeviceId,
-			int nOutputDeviceId)
+	public boolean Connect(int nLineNo, String sToURI, int nInputDeviceId, int nOutputDeviceId)
 	{
-
 		return super.Connect(nLineNo, sToURI, nInputDeviceId, nOutputDeviceId);
 	}
 
@@ -153,7 +178,6 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	@Override
 	public boolean UnHoldLine(int nLineNo)
 	{
-
 		return super.UnHoldLine(nLineNo);
 	}
 
@@ -175,7 +199,7 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 		 if(nLineNo == -1)
 			 return false;
 
-		 return m_aBusyStatus[nLineNo];
+		return m_aBusyStatus[nLineNo];
 	}
 
 	@Override
@@ -191,14 +215,18 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
+	public boolean ForceInbandDTMF(int nLineNo, boolean bEnable) {
+		return super.ForceInbandDTMF(nLineNo, bEnable);
+	}
+
+	@Override
 	public boolean DigitDTMF(int nLineNo, int nDigit)
 	{
 		return super.DigitDTMF(nLineNo, nDigit);
 	}
 
 	@Override
-	public void DeselectAllVoiceCodec()
-	{
+	public void DeselectAllVoiceCodec() {
 		super.DeselectAllVoiceCodec();
 	}
 
@@ -233,8 +261,7 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public boolean SetLicenceKey(String sLicenceKey)
-	{
+	public boolean SetLicenceKey(String sLicenceKey) {
 		return super.SetLicenceKey(sLicenceKey);
 	}
 
@@ -245,99 +272,72 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public int GetVaxObjectError()
-	{
+	public int GetVaxObjectError() {
 		return super.GetVaxObjectError();
 	}
 
 	@Override
-	public boolean MuteLineMIC(int nLineNo, boolean bEnable)
-	{
+	public boolean MuteLineMIC(int nLineNo, boolean bEnable) {
 		return super.MuteLineMIC(nLineNo, bEnable);
 	}
 
 	@Override
-	public boolean MuteLineSPK(int nLineNo, boolean bEnable)
-	{
+	public boolean MuteLineSPK(int nLineNo, boolean bEnable) {
 		return super.MuteLineSPK(nLineNo, bEnable);
 	}
 
 	@Override
-	public boolean MicSetSoftBoost(boolean bEnable)
-	{
+	public boolean MicSetSoftBoost(boolean bEnable) {
 		return super.MicSetSoftBoost(bEnable);
 	}
 
 	@Override
-	public boolean MicGetSoftBoost()
-	{
+	public boolean MicGetSoftBoost() {
 		return super.MicGetSoftBoost();
 	}
 
 	@Override
-	public boolean SpkSetSoftBoost(boolean bEnable)
-	{
+	public boolean SpkSetSoftBoost(boolean bEnable) {
 		return super.SpkSetSoftBoost(bEnable);
 	}
 
 	@Override
-	public boolean SpkGetSoftBoost()
-	{
+	public boolean SpkGetSoftBoost() {
 		return super.SpkGetSoftBoost();
 	}
 
 	@Override
-	public boolean MicSetAutoGain(int nValue)
-	{
+	public boolean MicSetAutoGain(int nValue) {
 		return super.MicSetAutoGain(nValue);
 	}
 
 	@Override
-	public int MicGetAutoGain()
-	{
+	public int MicGetAutoGain() {
 		return super.MicGetAutoGain();
 	}
 
 	@Override
-	public boolean SpkSetAutoGain(int nValue)
-	{
+	public boolean SpkSetAutoGain(int nValue) {
 		return super.SpkSetAutoGain(nValue);
 	}
 
 	@Override
-	public int SpkGetAutoGain()
-	{
+	public int SpkGetAutoGain() {
 		return super.SpkGetAutoGain();
 	}
 
-	 /* @Override
-	public void MuteMic(boolean bEnable)
-	{
-
-		super.MuteMic(bEnable);
-	}
-	 @Override
-	public void MuteSpk(boolean bEnable)
-	{
-
-		super.MuteSpk(bEnable);
-	}*/
-
 	@Override
-	public boolean VoiceChanger(int nPitch)
-	{
+	public boolean VoiceChanger(int nPitch) {
 		return super.VoiceChanger(nPitch);
 	}
 
 	@Override
-	public boolean SetEchoCancellation(boolean bEnable)
-	{
+	public boolean SetEchoCancellation(boolean bEnable) {
 		return super.SetEchoCancellation(bEnable);
 	}
 
 	@Override
-	public boolean GetEchoCancellation()
-	{
+	public boolean GetEchoCancellation() {
 		return super.GetEchoCancellation();
 	}
 
@@ -349,15 +349,12 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public boolean SpeakerPhone(boolean bEnable)
-	{
+	public boolean SpeakerPhone(boolean bEnable) {
 		return super.SpeakerPhone(bEnable);
 	}
 
-
-	 @Override
-	public boolean DiagnosticLog(boolean bEnable)
-	{
+	@Override
+	public boolean DiagnosticLog(boolean bEnable) {
 		return super.DiagnosticLog(bEnable);
 	}
 
@@ -368,38 +365,36 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	}
 
 	@Override
-	public void PostSocketRecvSIP(byte[] sData, int nDataSize, String sFromIP, int nFromPort)
-	{
+	public void PostSocketRecvSIP(byte[] sData, int nDataSize, String sFromIP, int nFromPort) {
 		super.PostSocketRecvSIP(sData, nDataSize, sFromIP, nFromPort);
 	}
 
 	@Override
 	public void PostSocketRecvRTP(int nLineNo, byte[] sData, int nDataSize, String sFromIP, int nFromPort)
 	{
-
 		super.PostSocketRecvRTP(nLineNo, sData, nDataSize, sFromIP, nFromPort);
 	}
 
 	@Override
 	public boolean PostMicDataPCM(byte[] aDataPCM, int nSizePCM)
 	{
-
 		return super.PostMicDataPCM(aDataPCM, nSizePCM);
 	}
 
 	public void VaxUnInit()
 	{
-
-		m_objTimerTick.StopTimer();
+//		m_objTimerTick.StopTimer();
 		m_bOnline = false;
 		UnInitialize();
 	}
 
 	public boolean VaxInit(String sUserName, String sDisplayName, String nAuthLogin, String sAuthPass, String sDomian, String sSIPProxy, boolean bRegister, int nTotalLines)
 	{
+
 		boolean bResult = true;
 		String sMyIP = m_objSocketSIP.GetMyIP().toString();
 
+		//TODO 20151128変更 700 ->20000
 		for(int nListenPortSIP = m_nLocalPortSIP; nListenPortSIP < 7000; nListenPortSIP++)
         {
 			if(!m_objSocketSIP.IsAvailablePort(nListenPortSIP))
@@ -411,29 +406,21 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 			break;
         }
 
-
 		if(bResult == false)
-		{
 			return false;
-		}
 
 		bResult = OpenLines(sMyIP, nTotalLines);
 		if(bResult == false) return false;
 
-		if(bRegister)
-			RegisterToProxy(1800);
+		if(bRegister) RegisterToProxy(1800);
 
-		m_objTimerTick.StartTimer(1000);
+//		m_objTimerTick.StartTimer(1000);
 		m_bOnline = true;
 		return true;
+
 	}
 
-	// TODO 追加
-	public boolean reLogin(){
-		return RegisterToProxy(1800);
-	}
-
-
+	//空いているRTPポートの検索（２づつ）
 	private Boolean OpenLines(String sMyIP, int nTotalLines)
     {
         Boolean bResult = true;
@@ -441,7 +428,7 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 
          for(int nLineNo = 0; nLineNo < nTotalLines; nLineNo++)
          {
-        	if(!SocketRTP.IsAvailablePort(nListenPortRTP))
+			 if(!SocketRTP.IsAvailablePort(nListenPortRTP))
  			{
         		nListenPortRTP += 2; //Increament by 2, RTP port must be an even number (According to the SDP RFC)
         		nLineNo = nLineNo - 1;
@@ -451,12 +438,13 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
         	bResult = OpenLine(nLineNo, false, sMyIP, nListenPortRTP);
         	if(bResult == false) break;
 
+        	ForceInbandDTMF(nLineNo, true);
+
         	nListenPortRTP += 2; //Increament by 2, RTP port must be an even number (According to the SDP RFC)
          }
 
           if(bResult == false)
           {
-        	  // Display Message Box.
         	  return false;
           }
 
@@ -466,21 +454,9 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 	public boolean VaxIsOnline()
 	{
 		return m_bOnline;
-
 	}
 
-	public void SetLocalPortSIP(int nPortSIP)
-	{
-		m_nLocalPortSIP = nPortSIP;
-
-	}
-
-	public void SetLocalPortRTP(int nPortRTP)
-	{
-		m_nLocalPortRTP = nPortRTP;
-
-	}
-
+	//???
 	public void SetVoiceCodec(boolean bEnable, int nCodecNo)
 	{
 		if(bEnable)
@@ -491,52 +467,13 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 		{
 			DeselectVoiceCodec(nCodecNo);
 		}
-
 	}
 
-	public int GetFreeLine()
-	{
-		int nLineNo;
-
-		for (nLineNo = 0 ; nLineNo < TOTAL_LINE_COUNT; nLineNo ++)
-		{
-			if(!IsLineBusy(nLineNo ))
-				break;
-		}
-
-		return nLineNo;
-
-	}
-	public void SetSpeakerState(boolean bSpeakerState)
-	{
-		m_bIsSprakerOn = bSpeakerState;
-
-	}
-
-	public boolean IsSpeakerOn()
-	{
-		return m_bIsSprakerOn;
-	}
-
+	//???
 	public void MuteMic(boolean bMute)
 	{
 		m_bMuteMic = bMute;
 		m_objMediaMic.Mute(bMute);
-	}
-
-	public void CloseMic()
-	{
-		m_objMediaMic.CloseMic();
-	}
-
-	public boolean IsMuteMic()
-	{
-		return m_bMuteMic;
-	}
-
-	public boolean IsDonotDisturb()
-	{
-		return m_bDonotDisturb;
 	}
 
 	public void MuteSpk(boolean bMute)
@@ -545,224 +482,182 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 		m_objMediaSpk.Mute(bMute);
 	}
 
-	public boolean IsMuteSpk()
+	public boolean CryptCOMM(boolean bEnable, String sRemoteIP, int nRemotePort)
 	{
-		return m_bMuteSpk;
-	}
-
-	public void IgnoreCall()
-	{
-
+		return super.CryptCOMM(bEnable, sRemoteIP, nRemotePort);
 	}
 
 ///////////////////////////////////////////    EVENTS    ////////////////////////////////////////////////////////////////////////////////////
 
 	public void OnSuccessToRegister()
 	{
-		listener.OnSuccessToRegister();
+		buzbiz_listener.OnSuccessToRegister();
 	}
 
  	public void OnSuccessToReRegister()
 	{
- 		listener.OnSuccessToReRegister();
+		buzbiz_listener.OnSuccessToReRegister();
 	}
 	public void OnSuccessToUnRegister()
 	{
-		listener.OnSuccessToUnRegister();
+		buzbiz_listener.OnSuccessToUnRegister();
 	}
-
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnTryingToRegister()
 	{
-		listener.OnTryingToRegister();
+		buzbiz_listener.OnTryingToRegister();
 	}
 	public void OnTryingToReRegister()
 	{
-		listener.OnTryingToReRegister();
+		buzbiz_listener.OnTryingToReRegister();
 	}
 	public void OnTryingToUnRegister()
 	{
-		listener.OnTryingToUnRegister();
+		buzbiz_listener.OnTryingToUnRegister();
 	}
-
-/////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////
-
 
 	public void OnFailToRegister(int nStatusCode, String sReasonPhrase)
 	{
-		listener.OnFailToRegister(nStatusCode, sReasonPhrase);
+		buzbiz_listener.OnFailToRegister(nStatusCode, sReasonPhrase);
 	}
 	public void OnFailToReRegister(int nStatusCode, String sReasonPhrase)
 	{
-		listener.OnFailToReRegister(nStatusCode, sReasonPhrase);
+		buzbiz_listener.OnFailToReRegister(nStatusCode, sReasonPhrase);
 	}
 	public void OnFailToUnRegister(int nStatusCode, String sReasonPhrase)
 	{
-		listener.OnFailToUnRegister(nStatusCode, sReasonPhrase);
+		buzbiz_listener.OnFailToUnRegister(nStatusCode, sReasonPhrase);
 	}
 
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnDialing(int nLineNo)
 	{
 		m_aBusyStatus[nLineNo] = true;
-
-		listener.OnDialing(nLineNo);
+		buzbiz_listener.OnDialing(nLineNo);
 	}
 
 	public void OnAccepting(int nLineNo)
 	{
 		m_aBusyStatus[nLineNo] = true;
-
-		listener.OnAccepting(nLineNo);
+		buzbiz_listener.OnAccepting(nLineNo);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnEndCall(int nLineNo)
 	{
 		m_aBusyStatus[nLineNo] = false;
-
-		listener.OnEndCall(nLineNo);
-
+		buzbiz_listener.OnEndCall(nLineNo);
 	}
 
 	public void OnConnecting(int nLineNo)
 	{
-		listener.OnConnecting(nLineNo);
+		buzbiz_listener.OnConnecting(nLineNo);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnTryingToHold(int nLineNo)
 	{
-		listener.OnTryingToHold(nLineNo);
+		buzbiz_listener.OnTryingToHold(nLineNo);
 	}
 	public void OnTryingToUnHold(int nLineNo)
 	{
-		listener.OnTryingToUnHold(nLineNo);
+		buzbiz_listener.OnTryingToUnHold(nLineNo);
 	}
 	public void OnFailToHold(int nLineNo)
 	{
-		listener.OnFailToHold(nLineNo);
+		buzbiz_listener.OnFailToHold(nLineNo);
 	}
 	public void OnFailToUnHold(int nLineNo)
 	{
-		listener.OnFailToUnHold(nLineNo);
+		buzbiz_listener.OnFailToUnHold(nLineNo);
 	}
 	public void OnSuccessToHold(int nLineNo)
 	{
-		listener.OnSuccessToHold(nLineNo);
+		buzbiz_listener.OnSuccessToHold(nLineNo);
 	}
 
 	public void OnSuccessToUnHold(int nLineNo)
 	{
-		listener.OnSuccessToUnHold(nLineNo);
+		buzbiz_listener.OnSuccessToUnHold(nLineNo);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
-
 
 	public void OnFailToConnect(int nLineNo)
 	{
-		listener.OnFailToConnect(nLineNo);
+		buzbiz_listener.OnFailToConnect(nLineNo);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnIncomingCall(String sCallId, String sDisplayName, String sUserName, String sFromURI, String sToURI)
 	{
-		listener.OnIncomingCall(sCallId, sDisplayName, sUserName, sFromURI, sToURI);
-
+		buzbiz_listener.OnIncomingCall(sCallId, sDisplayName, sUserName, sFromURI, sToURI);
 	}
 
 	public void OnIncomingCallRingingStart(String sCallId)
 	{
-		listener.OnIncomingCallRingingStart(sCallId);
+		buzbiz_listener.OnIncomingCallRingingStart(sCallId);
 	}
 
 	public void OnIncomingCallRingingStop(String sCallId)
 	{
-		listener.OnIncomingCallRingingStop(sCallId);
-
+		buzbiz_listener.OnIncomingCallRingingStop(sCallId);
 	}
-
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
 
 	public void OnConnected(int nLineNo, String sTxRTPIP, int nTxRTPPort, String sCallId)
 	{
-		listener.OnConnected(nLineNo, sTxRTPIP, nTxRTPPort, sCallId);
+		buzbiz_listener.OnConnected(nLineNo, sTxRTPIP, nTxRTPPort, sCallId);
 	}
 
 	public void OnProvisionalResponse(int nLineNo, int nStatusCode, String sReasonPharase)
 	{
-		listener.OnProvisionalResponse(nLineNo, nStatusCode, sReasonPharase);
+		buzbiz_listener.OnProvisionalResponse(nLineNo, nStatusCode, sReasonPharase);
 	}
 	public void OnFailureResponse(int nLineNo, int nStatusCode, String sReasonPharase)
 	{
-		listener.OnFailureResponse(nLineNo, nStatusCode, sReasonPharase);
+		buzbiz_listener.OnFailureResponse(nLineNo, nStatusCode, sReasonPharase);
 	}
 
 	public void OnRedirectResponse(int nLineNo, int nStatusCode, String sReasonPharase, String sContact)
 	{
-		listener.OnRedirectResponse(nLineNo, nStatusCode, sReasonPharase, sContact);
+		buzbiz_listener.OnRedirectResponse(nLineNo, nStatusCode, sReasonPharase, sContact);
 	}
 
 	public void OnDisconnectCall(int nLineNo)
 	{
 		m_aBusyStatus[nLineNo] = false;
-
-		listener.OnDisconnectCall(nLineNo);
+		buzbiz_listener.OnDisconnectCall(nLineNo);
 	}
 
 	public void OnCallTransferAccepted(int nLineNo)
 	{
 		m_aBusyStatus[nLineNo] = false;
-
-		listener.OnCallTransferAccepted(nLineNo);
+		buzbiz_listener.OnCallTransferAccepted(nLineNo);
 	}
 
 	public void OnFailToTransfer(int nLineNo, int nStatusCode, String sReasonPharase)
 	{
-		listener.OnFailToTransfer(nLineNo, nStatusCode, sReasonPharase);
+		buzbiz_listener.OnFailToTransfer(nLineNo, nStatusCode, sReasonPharase);
 	}
 
 	public void OnIncomingDiagnostic(String sMsgSIP, String sFromIP, int nFromPort)
 	{
-		listener.OnIncomingDiagnostic(sMsgSIP, sFromIP, nFromPort);
+		buzbiz_listener.OnIncomingDiagnostic(sMsgSIP, sFromIP, nFromPort);
 	}
 	public void OnOutgoingDiagnostic(String sMsgSIP, String sToIP, int nToPort)
 	{
-		listener.OnOutgoingDiagnostic(sMsgSIP, sToIP, nToPort);
+		buzbiz_listener.OnOutgoingDiagnostic(sMsgSIP, sToIP, nToPort);
 	}
-
 
 	///////////////////  SIP  /////////////////////////
 
 	public void OnSocketOpenSIP(String sListenIP, int nListenPort)
 	{
-//		android.util.Log.e("OnSocketOpenSIP", "OnSocketOpenSIP");
 		m_objSocketSIP.OpenSocket(sListenIP, nListenPort);
 	}
 
 	public void OnSocketCloseSIP()
 	{
-//		android.util.Log.e("OnSocketCloseSIP", "OnSocketCloseSIP");
 		m_objSocketSIP.CloseSocket();
 	}
 
 	public void OnSocketSendSIP(byte[] objData, int nDataSize, String sToIP, int nToPort)
 	{
-//		android.util.Log.e("OnSocketSendSIP", "OnSocketSendSIP");
 		m_objSocketSIP.SendData(objData, nDataSize, sToIP, nToPort);
 	}
 
@@ -770,19 +665,16 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 
 	public void OnSocketOpenRTP(int nLineNo, String sListenIP, int nListenPort)
 	{
-//		android.util.Log.e("OnSocketOpenRTP", "OnSocketOpenRTP");
 		m_aSocketRTP[nLineNo] = new SocketRTP(this);
 		m_aSocketRTP[nLineNo].OpenSocket(sListenIP, nListenPort);
 		m_aSocketRTP[nLineNo].SetLineNo(nLineNo);
 	}
 	public void OnSocketCloseRTP(int nLineNo)
 	{
-//		android.util.Log.e("OnSocketCloseRTP", "OnSocketCloseRTP");
 		m_aSocketRTP[nLineNo].CloseSocket();
 	}
 	public void OnSocketSendRTP(int nLineNo, byte[] aData, int nDataSize, String sToIP, int nToPort)
 	{
-//		android.util.Log.e("OnSocketSendRTP", "OnSocketSendRTP");
 		m_aSocketRTP[nLineNo].SendData(aData, nDataSize, sToIP, nToPort);
 	}
 
@@ -790,28 +682,23 @@ public class VaxSIPUserAgent extends VaxSIPUserAgentSO
 
 	public void OnMicData(byte[] aData, int nDataSize)
 	{
-//		android.util.Log.e("OnMicData", "OnMicData");
 		PostMicDataPCM(aData, nDataSize);
 	}
 
 	public void OnOpenMediaDevice(int nLineNo, int nDeviceMIC, int nDeviceSPK)
 	{
-//		android.util.Log.e("OnOpenMediaDevice", "OnOpenMediaDevice");
 		m_objMediaSpk.OpenSpk();
 		m_objMediaMic.OpenMic();
 	}
 
 	public void OnCloseMediaDevice(int nLineNo)
 	{
-//		android.util.Log.e("OnCloseMediaDevice", "OnCloseMediaDevice");
 		m_objMediaSpk.CloseSpk();
 		m_objMediaMic.CloseMic();
 	}
 
-	@Override
 	public void OnSpkDataPCM(byte[] aData, int nDataSize)
 	{
-//		android.util.Log.e("OnSpkDataPCM", "OnSpkDataPCM");
 		m_objMediaSpk.PlaySpk(aData, nDataSize);
 	}
 }

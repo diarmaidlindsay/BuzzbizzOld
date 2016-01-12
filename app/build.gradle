@@ -14,17 +14,16 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "jp.pulseanddecibels.buzbiz_onpre"
+        applicationId "jp.pulseanddecibels.buzbiz"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 5
-        versionName "1.3.2"
+        versionCode 12
+        versionName "2.1.1"
     }
     buildTypes {
         release {
@@ -36,16 +35,16 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:21.0.0'
 
-    // Butter Knife
+    //バターナイフ
     compile 'com.jakewharton:butterknife:6.1.0'
 
     // push通知
     compile 'com.google.android.gms:play-services:4.1.+'
 
     // crashlytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.2.2@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
         transitive = true;
     }
 

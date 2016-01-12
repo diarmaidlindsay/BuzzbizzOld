@@ -44,10 +44,11 @@
                 android:layout_marginRight="45dp"
                 android:orientation="horizontal">
 
+                <!--android:text="G711U"-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="G711U"
+                    android:text="1"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
                     android:textColor="#FFFFFF"/>
@@ -81,7 +82,6 @@
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>-->
 
-
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,21 +90,23 @@
                 android:layout_marginRight="45dp"
                 android:orientation="horizontal">
 
+                <!--android:text="GSM"-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
-                    android:text="Opus"
+                    android:text="2"
                     android:textColor="#FFFFFF"/>
                 <ToggleButton
-                    android:id="@+id/tb_opus"
+                    android:id="@+id/tb_gsm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
 
 
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,12 +115,13 @@
                 android:layout_marginRight="45dp"
                 android:orientation="horizontal">
 
+                <!--android:text="iLBC"-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
-                    android:text="iLBC"
+                    android:text="3"
                     android:textColor="#FFFFFF"/>
                 <ToggleButton
                     android:id="@+id/tb_ilbc"
@@ -128,6 +131,7 @@
             </RelativeLayout>
 
 
+
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -136,15 +140,16 @@
                 android:layout_marginRight="45dp"
                 android:orientation="horizontal">
 
+                <!--android:text="Opus"-->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:layout_alignParentLeft="true"
-                    android:text="GSM"
+                    android:text="4"
                     android:textColor="#FFFFFF"/>
                 <ToggleButton
-                    android:id="@+id/tb_gsm"
+                    android:id="@+id/tb_opus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"/>

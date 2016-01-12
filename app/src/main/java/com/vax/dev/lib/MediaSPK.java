@@ -2,118 +2,176 @@ package com.vax.dev.lib;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
-import android.media.AudioRecord;
 import android.media.AudioTrack;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 
-public class MediaSPK
+public class MediaSPK extends Thread
 {
 	private static final int RECORDER_SAMPLERATE = 16000;
 	private static final int RECORDER_AUDIO_ENCODING = AudioFormat.ENCODING_PCM_16BIT;
-	private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_IN_MONO;
-
-// 解決した為コメントアウト      注意	：	ここが16000だとhtc j oneで遅延が発生する
-//	static {
-//		if(android.os.Build.MODEL.equals("HTL22")){	// htc j one
-//			RECORDER_SAMPLERATE = 15999;
-//		}else{
-//			RECORDER_SAMPLERATE = 16000;
-//		}
-//	}
-
-
-	final VaxSIPUserAgent m_objVaxSIPUserAgent;
-
+	private static final int RECORDER_CHANNELS = AudioFormat.CHANNEL_OUT_MONO;
+			
+	Handler mHandler;
+	
 	boolean m_bMuteSpk = false;
-
-	int m_nMinBuffSize = 0;
-
 	AudioTrack m_objAudioTrack = null;
-
-	public MediaSPK(VaxSIPUserAgent objVaxSIPUserAgent)
+	
+	boolean m_bStopThread = false;
+	int m_nPostPlayCount = 0;
+	
+	public MediaSPK()
 	{
-		m_objVaxSIPUserAgent = objVaxSIPUserAgent;
+		super.start();
+		super.setPriority(MAX_PRIORITY);
+	}
+	
+	public void run() 
+	{
+		Looper.prepare();
+				
+        mHandler = new Handler() 
+        {
+            public void handleMessage(Message msg) 
+            {
+            }
+        };
+
+        Looper.loop();
+    }
+	
+
+	class OnOpenSpk implements Runnable 
+	{
+		public void run() 
+		{
+			m_nPostPlayCount = 0;
+			int nMinBuffSize = AudioTrack.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
+			m_objAudioTrack = new  AudioTrack(AudioManager.STREAM_VOICE_CALL, RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING, nMinBuffSize, AudioTrack.MODE_STREAM);
+			m_objAudioTrack.play();
+			
+			RunnableNotify(this);
+		}
+	};
+	
+	public void OpenSpk() 
+	{
+		m_bStopThread = false;
+		
+		OnOpenSpk objOpenSpk = new OnOpenSpk(); 
+		
+		mHandler.post(objOpenSpk);
+		RunnableWait(objOpenSpk);
 	}
 
-	public void OpenSpk()
+
+	class OnPlaySpk implements Runnable 
 	{
-//		try {
-//			m_nMinBuffSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
-//			m_objAudioTrack = new  AudioTrack(AudioManager.STREAM_VOICE_CALL,
-//											  RECORDER_SAMPLERATE,
-//											  AudioFormat.CHANNEL_OUT_MONO,
-//											  RECORDER_AUDIO_ENCODING,
-//											  m_nMinBuffSize,
-//											  AudioTrack.MODE_STREAM);
-//
-//		} catch (IllegalStateException ex) {
-//			m_nMinBuffSize = AudioRecord.getMinBufferSize(16000, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
-//			m_objAudioTrack = new  AudioTrack(AudioManager.STREAM_VOICE_CALL, 16000, AudioFormat.CHANNEL_OUT_MONO, RECORDER_AUDIO_ENCODING, m_nMinBuffSize, AudioTrack.MODE_STREAM);
-//		}
-
-		m_nMinBuffSize = AudioRecord.getMinBufferSize(RECORDER_SAMPLERATE, RECORDER_CHANNELS, RECORDER_AUDIO_ENCODING);
-		m_objAudioTrack = new  AudioTrack(AudioManager.STREAM_VOICE_CALL,
-										  RECORDER_SAMPLERATE,
-										  AudioFormat.CHANNEL_OUT_MONO,
-										  RECORDER_AUDIO_ENCODING,
-										  m_nMinBuffSize,
-										  AudioTrack.MODE_STREAM);
-
-		m_objAudioTrack.play();
-	}
+		public byte[] m_aDataPCM = null;
+		public int m_nSizePCM;
+				
+		public void run() 
+		{
+			if(m_bStopThread || m_objAudioTrack == null)
+				return;
+			
+			m_nPostPlayCount--;
+			
+			if(m_nPostPlayCount > 4)
+				return;
+			
+			m_objAudioTrack.write(m_aDataPCM, 0, m_nSizePCM);
+		}
+	};
 
 	public void PlaySpk(byte[] aData, int nDataSize)
 	{
-		if(m_bMuteSpk)
+		if(m_bStopThread || m_objAudioTrack == null)
+			return;
+		
+		OnPlaySpk objPlaySpk = new OnPlaySpk();
+		
+		objPlaySpk.m_aDataPCM = new byte[nDataSize];
+		objPlaySpk.m_nSizePCM = nDataSize;
+		
+		if(!m_bMuteSpk)
 		{
-			byte[] aDataSilence = new byte[nDataSize];
-			try{
-				m_objAudioTrack.write(aDataSilence, 0, nDataSize);
-			}catch(Exception ex){
-				ex.printStackTrace();
-				android.util.Log.e("MediaSPK", ex.toString());
-			}
+			System.arraycopy(aData, 0, objPlaySpk.m_aDataPCM, 0, nDataSize);
 		}
-		else
+		
+		m_nPostPlayCount++;
+		
+		mHandler.post(objPlaySpk);
+	}
+	
+
+	class OnCloseSpk implements Runnable 
+	{
+		public void run() 
 		{
-			try{
-				m_objAudioTrack.write(aData, 0, nDataSize);
-			}catch(Exception ex){
-				ex.printStackTrace();
-				android.util.Log.e("MediaSPK", ex.toString());
+			if(m_objAudioTrack != null)
+			{
+				m_objAudioTrack.stop();
+				m_objAudioTrack.release();
+				m_objAudioTrack = null;
 			}
+			
+			RunnableNotify(this);
 		}
+	};
+	public void CloseSpk() 
+	{
+		m_bStopThread = true;
+//		Sleep(200);
+		Sleep(20);
+		
+		OnCloseSpk objCloseSpk = new OnCloseSpk();
+		
+		mHandler.post(objCloseSpk);
+		RunnableWait(objCloseSpk);
 	}
 
 	public void Mute(boolean bEnable)
     {
     	m_bMuteSpk = bEnable;
     }
-
-	public void CloseSpk()
+	
+	void RunnableNotify(Runnable runnable)
 	{
-		if(m_objAudioTrack == null)
-			return;
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) { }
-
-				try
-				{
-					m_objAudioTrack.stop();
-					m_objAudioTrack.release();
-
-					m_objAudioTrack = null;
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-					android.util.Log.e("MediaSPK", ex.toString());
-				}
+//		Sleep(50);
+		Sleep(5);
+		
+		synchronized(runnable)
+		{
+			runnable.notify();
+		}
+	}
+	
+	void RunnableWait(Runnable runnable)
+	{
+		try 
+		{
+			synchronized(runnable)
+			{
+				runnable.wait();
 			}
-		}).start();
+		} 
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void Sleep(int nMilliSec)
+	{
+		try 
+		{
+			Thread.sleep(nMilliSec);
+		}
+		catch (InterruptedException e) 
+		{
+			e.printStackTrace();
+		}
 	}
 }

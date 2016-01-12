@@ -60,41 +60,45 @@
 
 
 
-		    <View
-		        android:layout_width="0dp"
-		        android:layout_height="100dp"/>
+			<View
+				android:layout_width="0dp"
+				android:layout_height="20dp"/>
+
+			<!--<View-->
+				<!--android:layout_width="0dp"-->
+				<!--android:layout_height="100dp"/>-->
 
 
-		    <LinearLayout
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:gravity="center_horizontal"
-		        android:weightSum="1">
+		    <!--<LinearLayout-->
+		        <!--android:layout_width="match_parent"-->
+		        <!--android:layout_height="wrap_content"-->
+		        <!--android:gravity="center_horizontal"-->
+		        <!--android:weightSum="1">-->
 
-		        <Button
-		            android:id="@+id/btn_vpn_setting"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:background="@drawable/image_vpn_setting"
-                    android:onClick="clickVpnSettingButton"/>
+		        <!--<Button-->
+		            <!--android:id="@+id/btn_vpn_setting"-->
+		            <!--android:layout_width="wrap_content"-->
+		            <!--android:layout_height="wrap_content"-->
+		            <!--android:background="@drawable/image_vpn_setting"-->
+                    <!--android:onClick="clickVpnSettingButton"/>-->
 
-		        <View
-		            android:layout_width="0dp"
-		            android:layout_height="0dp"
-		            android:layout_weight="0.2"/>
+		        <!--<View-->
+		            <!--android:layout_width="0dp"-->
+		            <!--android:layout_height="0dp"-->
+		            <!--android:layout_weight="0.2"/>-->
 
-		        <Button
-		            android:id="@+id/btn_wifi_setting"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:background="@drawable/image_wifi_setting"
-                    android:onClick="clickWifiSettingButton"/>
-		    </LinearLayout>
+		        <!--<Button-->
+		            <!--android:id="@+id/btn_wifi_setting"-->
+		            <!--android:layout_width="wrap_content"-->
+		            <!--android:layout_height="wrap_content"-->
+		            <!--android:background="@drawable/image_wifi_setting"-->
+                    <!--android:onClick="clickWifiSettingButton"/>-->
+		    <!--</LinearLayout>-->
 
 
-		    <View
-		        android:layout_width="0dp"
-		        android:layout_height="100dp" />
+		    <!--<View-->
+		        <!--android:layout_width="0dp"-->
+		        <!--android:layout_height="100dp" />-->
 
 
 		    <TextView
@@ -232,103 +236,103 @@
 
 
             <!-- タブの設定 -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="50dp" />
+            <!--<View-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="50dp" />-->
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:text="@string/tabSetting"
-                android:textColor="#FFFFFF"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="45dp"-->
+                <!--android:layout_marginRight="45dp"-->
+                <!--android:text="@string/tabSetting"-->
+                <!--android:textColor="#FFFFFF"-->
+                <!--android:textSize="30sp"-->
+                <!--android:textStyle="bold" />-->
 
-		    <TextView
-		        android:id="@+id/setting_tab_position_title_textview"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_marginTop="10dp"
-		        android:layout_marginLeft="45dp"
-			    android:layout_marginRight="45dp"
-		        android:text="@string/setting_tab_position_title"
-		        android:textColor="#FFFFFF"
-		        android:visibility="gone"/>
-
-
-		    <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:gravity="center_horizontal"
-                android:weightSum="1"
-                android:visibility="gone">
-
-                <ToggleButton
-                    android:id="@+id/tbtn_tab_position_normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/image_tab_normal"
-                    android:textOff=""
-                    android:textOn="" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.2" />
-
-                <ToggleButton
-                    android:id="@+id/tbtn_tab_position_reversal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/image_tab_reversal"
-                    android:textOff=""
-                    android:textOn="" />
-            </LinearLayout>
+		    <!--<TextView-->
+		        <!--android:id="@+id/setting_tab_position_title_textview"-->
+		        <!--android:layout_width="wrap_content"-->
+		        <!--android:layout_height="wrap_content"-->
+		        <!--android:layout_marginTop="10dp"-->
+		        <!--android:layout_marginLeft="45dp"-->
+			    <!--android:layout_marginRight="45dp"-->
+		        <!--android:text="@string/setting_tab_position_title"-->
+		        <!--android:textColor="#FFFFFF"-->
+		        <!--android:visibility="gone"/>-->
 
 
-		    <TextView
-		        android:id="@+id/setting_tab_operation_title_textview"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_marginTop="10dp"
-		        android:layout_marginLeft="45dp"
-			    android:layout_marginRight="45dp"
-		        android:text="@string/setting_tab_operation_title"
-		        android:textColor="#FFFFFF" />
+		    <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="3dp"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--android:weightSum="1"-->
+                <!--android:visibility="gone">-->
 
-		    <LinearLayout
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:layout_marginTop="3dp"
-		        android:gravity="center_horizontal"
-		        android:weightSum="1"
-		        android:layout_marginBottom="50dp">
+                <!--<ToggleButton-->
+                    <!--android:id="@+id/tbtn_tab_position_normal"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/image_tab_normal"-->
+                    <!--android:textOff=""-->
+                    <!--android:textOn="" />-->
 
-		        <ToggleButton
-		            android:id="@+id/tbtn_tab_operation_tap"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:background="@drawable/image_tab_tap"
-		            android:textOff=""
-		            android:textOn="" />
+                <!--<View-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="0dp"-->
+                    <!--android:layout_weight="0.2" />-->
 
-		        <View
-		            android:layout_width="0dp"
-		            android:layout_height="0dp"
-		            android:layout_weight="0.2" />
+                <!--<ToggleButton-->
+                    <!--android:id="@+id/tbtn_tab_position_reversal"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/image_tab_reversal"-->
+                    <!--android:textOff=""-->
+                    <!--android:textOn="" />-->
+            <!--</LinearLayout>-->
 
-		        <ToggleButton
-		            android:id="@+id/tbtn_tab_operation_frick"
-		            android:layout_width="wrap_content"
-		            android:layout_height="wrap_content"
-		            android:background="@drawable/image_tab_frick"
-		            android:textOff=""
-		            android:textOn="" />
-		    </LinearLayout>
+
+		    <!--<TextView-->
+		        <!--android:id="@+id/setting_tab_operation_title_textview"-->
+		        <!--android:layout_width="wrap_content"-->
+		        <!--android:layout_height="wrap_content"-->
+		        <!--android:layout_marginTop="10dp"-->
+		        <!--android:layout_marginLeft="45dp"-->
+			    <!--android:layout_marginRight="45dp"-->
+		        <!--android:text="@string/setting_tab_operation_title"-->
+		        <!--android:textColor="#FFFFFF" />-->
+
+		    <!--<LinearLayout-->
+		        <!--android:layout_width="match_parent"-->
+		        <!--android:layout_height="wrap_content"-->
+		        <!--android:layout_marginTop="3dp"-->
+		        <!--android:gravity="center_horizontal"-->
+		        <!--android:weightSum="1"-->
+		        <!--android:layout_marginBottom="50dp">-->
+
+		        <!--<ToggleButton-->
+		            <!--android:id="@+id/tbtn_tab_operation_tap"-->
+		            <!--android:layout_width="wrap_content"-->
+		            <!--android:layout_height="wrap_content"-->
+		            <!--android:background="@drawable/image_tab_tap"-->
+		            <!--android:textOff=""-->
+		            <!--android:textOn="" />-->
+
+		        <!--<View-->
+		            <!--android:layout_width="0dp"-->
+		            <!--android:layout_height="0dp"-->
+		            <!--android:layout_weight="0.2" />-->
+
+		        <!--<ToggleButton-->
+		            <!--android:id="@+id/tbtn_tab_operation_frick"-->
+		            <!--android:layout_width="wrap_content"-->
+		            <!--android:layout_height="wrap_content"-->
+		            <!--android:background="@drawable/image_tab_frick"-->
+		            <!--android:textOff=""-->
+		            <!--android:textOn="" />-->
+		    <!--</LinearLayout>-->
 
 		    <Button
                 android:layout_width="match_parent"

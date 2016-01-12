@@ -2,27 +2,23 @@ package com.vax.dev.lib;
 
 import android.util.Log;
 
-public class VaxSIPUserAgentSO
+//Vaxの制御クラス
+public class VaxSIPUserAgentSO 
 {
-
-	static
+	static 
 	{
 		try
 		{
 			System.loadLibrary("DevVaxSIPUserAgent");
-
-
 		}
-
-		catch (UnsatisfiedLinkError e)
+		catch (UnsatisfiedLinkError e) 
 		{
 			System.err.println("public native code library failed to load.\n" + e);
-			Log.e("Tag",e.getMessage());
-
+			
 		}
-
+		
 	}
-
+	
 	public native boolean InitializeEx(boolean bBindToListenIP, String sListenIP, int nListenPort, String sUserName, String sLogin, String sLoginPwd, String sDisplayName, String sDomainRealm, String sSIPProxy, String sSIPOutBoundProxy, int nTotalLine);
 	public native boolean Initialize(boolean bBindToListenIP, String sListenIP, int nListenPort, String sFromURI, String sSIPOutBoundProxy, String sSIPProxy, String sLoginId, String sLoginPwd, int nTotalLine);
 
@@ -52,7 +48,7 @@ public class VaxSIPUserAgentSO
 	public native boolean IsLineHold(int nLineNo);
 
 	public native boolean OpenLine(int nLineNo, boolean bBindToRTPRxIP, String sRTPRxIP, int nRTPRxPort);
-
+	
 	public native boolean ForceInbandDTMF(int nLineNo, boolean bEnable);
 	public native boolean DigitDTMF(int nLineNo, int nDigit);
 
@@ -93,73 +89,68 @@ public class VaxSIPUserAgentSO
 	public native boolean GetEchoCancellation();
 
 	public native boolean DonotDisturb(boolean bEnable);
-	public native boolean BackgroundMode(boolean bEnable);
 	public native boolean SpeakerPhone(boolean bEnable);
-
-	public native boolean RecordStart(String sFileName);
-	public native void RecordStop();
-	public native void RecordPause(boolean bEnable);
-
-	public native boolean RecordTrvsSTART(String sDirectoryPath);
-	public native String RecordTrvsNEXT();
-
-	public native boolean PlayWaveMemOpen(String sFileMem,int nSizeData);
-	public native boolean PlayWaveMemStart(boolean bLoopPlay);
-	public native boolean PlayWaveMemStop();
-	public native boolean PlayWaveMemVolume(int nVolume);
-	public native boolean PlayWaveMemPause(boolean bPause);
-	public native void PlayWaveMemClose();
-
+	
 	public native boolean DiagnosticLog(boolean bEnable);
 
 	public native void ApplicationEnterForeground();
 	public native void ApplicationEnterBackground();
-
+	
 	public native int GetJitterCountPacketTotal(int nLineNo);
 	public native int GetJitterCountPacketLost(int nLineNo);
 	public native int GetJitterSizeBuffer(int nLineNo);
-
+	
+	public native boolean CryptCOMM(boolean bEnable, String sRemoteIP, int nRemotePort);
+	public native void SetUUID(String sUUID);
+	
+	public native boolean SetOpusEncodeBitRate(int nLineNo, int nBitRate);  // Value: 1 to 500 otherwise  -1 = Auto, -2 = Maximum BitRate
+	public native boolean SetOpusEncodeInbandFEC(int nLineNo, boolean bInbandFEC);
+	
+	public native boolean RecordStart(String sFileName);
+	public native boolean RecordStop();
+	public native boolean RecordPause(boolean bEnable);
+		
 	///////////////////////////////////////////
-
+	
 	public native void PostOneSecondTick();
-
-	public native void PostSocketRecvSIP(byte sData[], int nDataSize, String sFromIP, int nFromPort);
+	
+	public native void PostSocketRecvSIP(byte sData[], int nDataSize, String sFromIP, int nFromPort);     
 	public native void PostSocketRecvRTP(int nLineNo, byte[] sData, int nDataSize, String sFromIP, int nFromPort);
 
 	public native boolean PostMicDataPCM(byte[] aDataPCM, int nSizePCM);
-
+		
 	////////////////EVENTS //////////////////////
 
 	public void OnSuccessToRegister()
 	{
 	}
-	public  void OnSuccessToReRegister()
+	public  void OnSuccessToReRegister() 
 	{
 	}
-	public  void OnSuccessToUnRegister()
+	public  void OnSuccessToUnRegister() 
 	{
 	}
 
-	public  void OnTryingToRegister()
+	public  void OnTryingToRegister() 
 	{
 	}
 	public  void OnTryingToReRegister()
 	{
 	}
-	public  void OnTryingToUnRegister()
+	public  void OnTryingToUnRegister() 
 	{
 	}
-
-	public  void OnFailToRegister(int nStatusCode, String sReasonPhrase)
+	
+	public  void OnFailToRegister(int nStatusCode, String sReasonPhrase) 
 	{
 	}
 	public  void OnFailToReRegister(int nStatusCode, String sReasonPhrase)
 	{
 	}
-	public  void OnFailToUnRegister(int nStatusCode, String sReasonPhrase)
+	public  void OnFailToUnRegister(int nStatusCode, String sReasonPhrase) 
 	{
 	}
-
+	
 	public  void OnConnecting(int nLineNo)
 	{
 	}
@@ -175,104 +166,104 @@ public class VaxSIPUserAgentSO
 	public  void OnFailToUnHold(int nLineNo)
 	{
 	}
-	public  void OnSuccessToHold(int nLineNo)
+	public  void OnSuccessToHold(int nLineNo) 
 	{
 	}
-
-	public  void OnSuccessToUnHold(int nLineNo)
+	
+	public  void OnSuccessToUnHold(int nLineNo) 
 	{
 	}
-	public  void OnFailToConnect(int nLineNo)
+	public  void OnFailToConnect(int nLineNo) 
 	{
 	}
-	public  void OnIncomingCall(String sCallId, String sDisplayName, String sUserName, String sFromURI, String sToURI)
+	public  void OnIncomingCall(String sCallId, String sDisplayName, String sUserName, String sFromURI, String sToURI) 
 	{
 	}
-
-	public  void OnIncomingCallRingingStart(String sCallId)
+	
+	public  void OnIncomingCallRingingStart(String sCallId) 
 	{
 	}
 	public  void OnIncomingCallRingingStop(String sCallId)
 	{
 	}
-
+	
 	public  void OnConnected(int nLineNo, String sTxRTPIP, int nTxRTPPort, String sCallId)
 	{
 	}
-
-	public  void OnProvisionalResponse(int nLineNo, int nStatusCode, String sReasonPharase)
+	
+	public  void OnProvisionalResponse(int nLineNo, int nStatusCode, String sReasonPharase) 
 	{
 	}
-	public  void OnFailureResponse(int nLineNo, int nStatusCode, String sReasonPharase)
+	public  void OnFailureResponse(int nLineNo, int nStatusCode, String sReasonPharase) 
 	{
 	}
-
-	public  void OnRedirectResponse(int nLineNo, int nStatusCode, String sReasonPharase, String sContact)
+	
+	public  void OnRedirectResponse(int nLineNo, int nStatusCode, String sReasonPharase, String sContact) 
 	{
 	}
 	public  void OnDisconnectCall(int nLineNo)
 	{
 	}
-
-	public  void OnCallTransferAccepted(int nLineNo)
+	
+	public  void OnCallTransferAccepted(int nLineNo) 
 	{
 	}
 	public  void OnFailToTransfer(int nLineNo, int nStatusCode, String sReasonPharase)
 	{
 	}
-
+	
 	public  void OnIncomingDiagnostic(String sMsgSIP, String sFromIP, int nFromPort)
 	{
 	}
 	public  void OnOutgoingDiagnostic(String sMsgSIP, String sToIP, int nToPort)
 	{
 	}
-
+	
 	public void OnHoldCall(int nLineNo)
 	{
 	}
 	public void OnUnHoldCall(int nLineNo)
 	{
 	}
-
+	
 	///////////////////  SIP  /////////////////////////
-
+	
 	public void OnSocketOpenSIP(String sListenIP, int nListenPort)
 	{
-
+		
 	}
-	public  void OnSocketCloseSIP()
+	public  void OnSocketCloseSIP() 
 	{
 	}
 	public  void OnSocketSendSIP(byte[] objData, int nDataSize, String sToIP, int nToPort)
 	{
 	}
-
+	
 	///////////////////////  RTP  ///////////////////////////////////
-
+	
 	public  void OnSocketOpenRTP(int nLineNo, String sListenIP, int nListenPort)
 	{
 	}
-	public  void OnSocketCloseRTP(int nLineNo)
+	public  void OnSocketCloseRTP(int nLineNo) 
 	{
 	}
-	public  void OnSocketSendRTP(int nLineNo, byte[] sData, int nDataSize, String sToIP, int nToPort)
+	public  void OnSocketSendRTP(int nLineNo, byte[] sData, int nDataSize, String sToIP, int nToPort) 
 	{
 	}
-
+	
 	////////////////////// Media ///////////////////////////////
-
-	public  void OnOpenMediaDevice(int nLineNo, int nDeviceMIC, int nDeviceSPK)
+	
+	public  void OnOpenMediaDevice(int nLineNo, int nDeviceMIC, int nDeviceSPK) 
 	{
 	}
-	public  void OnCloseMediaDevice(int nLineNo)
+	public  void OnCloseMediaDevice(int nLineNo) 
 	{
-
+		
 	}
-
+	
 	public void OnSpkDataPCM(byte[] aData, int nDataSize)
 	{
-
+	
 	}
-
+		
 }

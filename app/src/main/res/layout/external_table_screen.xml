@@ -73,7 +73,7 @@
             android:layout_weight="70"
             android:divider="@drawable/list_item_divider"/>
 
-        <jp.pulseanddecibels.buzbiz_onpre.CharSerchLayout
+        <jp.pulseanddecibels.buzbiz.CharSerchLayout
             android:id="@+id/external_char_serch"
             android:layout_width="0dp"
             android:layout_height="match_parent"

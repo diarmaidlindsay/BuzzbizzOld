@@ -17,13 +17,9 @@ public class CircularBUFF
 		 m_nAvailableCount = 0;
 		 m_nWriteIndex = 0;
 		 m_nReadIndex = 0;
-		 
+
 		 SetSizeBUFF(16000);
-	 }
-	 
-	 public int GetCount()
-	 {
-	 	return m_nAvailableCount;
+//		 SetSizeBUFF(2000);//MediaMiの方も2000にしたがアプリが強制終了してしまう
 	 }
 	 
 	 public void ResetBUFF()

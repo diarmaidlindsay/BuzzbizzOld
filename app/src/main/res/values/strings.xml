@@ -36,7 +36,6 @@
     <string name="login_title">ログイン設定</string>
 
 
-
     <!-- 保留リスト -->
     <string name="hold_title">保留リスト</string>
     <string name="hold_list_empty">保留なし</string>
@@ -63,21 +62,19 @@
     <string name="answer">応答</string>
     <string name="reject">拒否</string>
 
-
-
     <!-- URL -->
-    <string name="cert_url">https://%s/ca/android/cert.bks</string>
-    <string name="licence_key_url">https://%s/address/license_android.txt</string>
-    <string name="login_url">https://%s/address/login.php</string>
-    <string name="callcheck_url">https://%s/address/callcheck.php</string>
-    <string name="internaltel_url">https://%s/address/inline.php</string>
-    <string name="externaltel_url">https://%s/address/outline.php</string>
-    <string name="hold_url">https://%s/address/hold.php</string>
-    <string name="history_url">https://%s/address/history.php</string>
-    <string name="name_serch_url">https://%s/address/get_incoming_info.php</string>
-    <string name="check_login_status_url">https://%s/address/check_status.php</string>
-    <string name="push_registe_url">https://%s/address/add_endpoint.php</string>
-    <string name="logout_url">https://%s/address/logout.php</string>
+    <!--<string name="cert_url">https://%s/ca/android/cert.bks</string>-->
+    <!--<string name="licence_key_url">https://%s/address/license_android.txt</string>-->
+    <!--<string name="login_url">https://%s/address/login.php</string>-->
+    <!--<string name="callcheck_url">https://%s/address/callcheck.php</string>-->
+    <!--<string name="internaltel_url">https://%s/address/inline.php</string>-->
+    <!--<string name="externaltel_url">https://%s/address/outline.php</string>-->
+    <!--<string name="hold_url">https://%s/address/hold.php</string>-->
+    <!--<string name="history_url">https://%s/address/history.php</string>-->
+    <!--<string name="name_serch_url">https://%s/address/get_incoming_info.php</string>-->
+    <!--<string name="check_login_status_url">https://%s/address/check_status.php</string>-->
+    <!--<string name="push_registe_url">https://%s/address/add_endpoint.php</string>-->
+    <!--<string name="logout_url">https://%s/address/logout.php</string>-->
 
 
     <color name="white">#FFFFFF</color>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="jp.pulseanddecibels.buzbiz_onpre" >
+    package="jp.pulseanddecibels.buzbiz" >
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,7 +17,7 @@
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <permission
-        android:name="jp.pulseanddecibels.buzbiz_onpre.permission.C2D_MESSAGE"
+        android:name="jp.pulseanddecibels.buzbiz.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="jp.pulseanddecibels.buzbiz.permission.C2D_MESSAGE" />
@@ -29,14 +29,15 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/buzbiz_icon"
         android:label="@string/app_name"
-        android:theme="@style/my_activity_theme" >
+        android:theme="@style/my_activity_theme"
+        android:largeHeap="true">
 
         <!-- アプリに割り当てられるヒープ領域を拡大   (10以降) -->
         <!-- 高速化の為、背景の塗りつぶしなしの自作テーマを適用 -->
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="4e56e637a6dc71acfa12391a5b8aa209d438ce34" />
+            android:value="9776871e81a1da165af871870c0ded346acf423d" />
 
         <!-- スプラッシュ画面 -->
         <activity
@@ -78,7 +79,7 @@
         <service android:name=".MainService" />
 
         <receiver
-            android:name=".GcmBroadcastReceiver"
+            android:name=".util.push.GcmBroadcastReceiver"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -87,7 +88,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".GcmIntentService" />
+        <service android:name=".util.push.GcmIntentService" />
 
         <!-- コーデック設定画面 -->
         <activity
