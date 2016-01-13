@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BUZBIZ-on-premises.iml" filepath="$PROJECT_DIR$/BUZBIZ-on-premises.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/buzbiz_onpremises_android.iml" filepath="$PROJECT_DIR$/buzbiz_onpremises_android.iml" />
     </modules>
   </component>
 </project>
-

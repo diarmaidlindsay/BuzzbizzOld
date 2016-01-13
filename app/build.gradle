@@ -15,8 +15,9 @@ repositories {
 }
 
 android {
-    compileSdkVersion 21
+    compileSdkVersion 23
     buildToolsVersion "21.1.2"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "jp.pulseanddecibels.buzbiz"
@@ -35,13 +36,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:21.0.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
 
     //バターナイフ
     compile 'com.jakewharton:butterknife:6.1.0'
 
     // push通知
-    compile 'com.google.android.gms:play-services:4.1.+'
+    compile 'com.google.android.gms:play-services:8.4.0'
 
     // crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.4.0@aar') {
