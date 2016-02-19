@@ -1,15 +1,13 @@
 package jp.pulseanddecibels.buzbiz.models;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jp.pulseanddecibels.buzbiz.IncomingCallItem;
 import jp.pulseanddecibels.buzbiz.MainService;
 import jp.pulseanddecibels.buzbiz.data.TelNumber;
+import jp.pulseanddecibels.buzbiz.pjsip.BuzBizCall;
 
 /**
  *
@@ -99,14 +97,13 @@ public enum IncomingCallControl {
 	 * 着信に応答
 	 * @param callId	応答する着信ID
 	 */
-	public void anserTo(String callId) {
+	public void answerTo(String callId, BuzBizCall call) {
 		synchronized (items) {
-			// 指定の着信に応答
-			MainService.LIB_OP.anserCall(callId);
-
 			// 応答した着信アイテムを削除
 			items.remove(callId);
 		}
+		// 指定の着信に応答
+		MainService.LIB_OP.answerCall(call);
 	}
 
 
@@ -120,15 +117,18 @@ public enum IncomingCallControl {
 		synchronized (items) {
 			// 全着信を拒否
 			for (String key : items.keySet()) {
-				MainService.LIB_OP.rejectCall(key);
+				MainService.LIB_OP.rejectCall(items.get(key).call);
 			}
 
 			// 着信情報を初期化
-			items.clear();
+			clearCallList();
 		}
 	}
 
 
+	public void clearCallList() {
+		items.clear();
+	}
 
 
 

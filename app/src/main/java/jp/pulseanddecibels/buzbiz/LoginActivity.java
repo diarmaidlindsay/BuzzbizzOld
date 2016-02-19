@@ -1,24 +1,22 @@
 package jp.pulseanddecibels.buzbiz;
 
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.*;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.Process;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -107,6 +105,13 @@ public class LoginActivity
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);    // タイトルは非表示
         setContentView(jp.pulseanddecibels.buzbiz.R.layout.login_screen);            // ビューを設定
+        Button settingsButton = (Button) findViewById(R.id.button_settings);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickSSSS(v);
+            }
+        });
         ButterKnife.inject(this);
 
         // 各UI部品を初期化
@@ -129,7 +134,7 @@ public class LoginActivity
 
         // メインActivityが残っている場合は終了させる
         MainActivity.end();
-        System.gc();
+        //System.gc();
     }
 
 
@@ -250,17 +255,17 @@ public class LoginActivity
         final String userName = Util.getText(usernameEditText);
         final String password = Util.getText(passwordEditText);
         setting.saveAccount(context, userName, password);
-
+        Log.d("LoginActivity", "login1");
         final String localServer = Util.getText(locaServerEditText);
         final String ssid        = Util.getText(ssidEditText);
         setting.saveLocalServerInfo(getApplicationContext(), localServer, ssid);
-
+        Log.d("LoginActivity", "login2");
         final String remoteServer = Util.getText(remoteServerEditText);
         setting.saveRemoteServerInfo(getApplicationContext(), remoteServer);
 
         // ログインマネージャーを生成
         LoginManager loginManager = new LoginManager();
-
+        Log.d("LoginActivity", "login3");
         // ログインに必要な情報が無い場合は、メッセージを表示し終了
         boolean dataOk = setting.isExistSetting(context);
         if(!dataOk){
@@ -268,7 +273,7 @@ public class LoginActivity
             showMessage(inputNgMessage);
             return;
         }
-
+        Log.d("LoginActivity", "login4");
         // ログイン開始
         loginManager.login(this, HANDLER);
     }
@@ -282,25 +287,25 @@ public class LoginActivity
      */
     private synchronized void logoff() {
 //		Log.e(Util.LOG_TAG,"  ログイン画面.logout  ");
-
+        Log.d("LoginActivity", "logoff1");
 
         // ログアウト状態を保存
         new LoginStatus(LoginStatus.OFFLINE).save(getApplicationContext());
 
         // SIPプロキシサーバから登録解除
         MainService.LIB_OP.logout();
-
+        Log.d("LoginActivity", "logoff2");
         Intent sipService = new Intent(getApplicationContext(), MainService.class);
         sipService.putExtra("message", "re-resident");
         startService(sipService);
-
+        Log.d("LoginActivity", "logoff3");
         // サーバ死活監視終了
         LoginChecker.stop();
 
         // ※ Vaxではログアウトできないことも有るため強制的にログアウト
         LoginManager loginManager = new LoginManager();
         loginManager.logout(this);
-
+        Log.d("LoginActivity", "logoff4");
         // 少し待機
         Util.waitMiriSec(700);
     }

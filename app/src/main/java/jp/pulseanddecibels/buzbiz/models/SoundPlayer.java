@@ -69,7 +69,7 @@ public enum SoundPlayer {
 					player.stop();
 				}
 				player.release();
-				System.gc();
+				//System.gc();
 			} catch (Exception ex) {
 				ex.getStackTrace();
 			} finally{

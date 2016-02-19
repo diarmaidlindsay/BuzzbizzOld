@@ -1,15 +1,26 @@
 package jp.pulseanddecibels.buzbiz.models;
 
-import jp.pulseanddecibels.buzbiz.MainService;
-import jp.pulseanddecibels.buzbiz.R;
-import jp.pulseanddecibels.buzbiz.data.DtmfCode;
-import jp.pulseanddecibels.buzbiz.data.TelNumber;
-
 import android.content.Context;
 import android.media.AudioManager;
 import android.util.Log;
 
-import com.vax.dev.lib.VaxSIPUserAgent;
+import org.pjsip.pjsua2.AccountConfig;
+import org.pjsip.pjsua2.AccountInfo;
+import org.pjsip.pjsua2.AuthCredInfo;
+import org.pjsip.pjsua2.CallOpParam;
+import org.pjsip.pjsua2.Endpoint;
+import org.pjsip.pjsua2.EpConfig;
+import org.pjsip.pjsua2.PresenceStatus;
+import org.pjsip.pjsua2.TransportConfig;
+import org.pjsip.pjsua2.pjsip_status_code;
+import org.pjsip.pjsua2.pjsip_transport_type_e;
+import org.pjsip.pjsua2.pjsua_buddy_status;
+
+import jp.pulseanddecibels.buzbiz.MainService;
+import jp.pulseanddecibels.buzbiz.data.DtmfCode;
+import jp.pulseanddecibels.buzbiz.data.TelNumber;
+import jp.pulseanddecibels.buzbiz.pjsip.BuzBizCall;
+import jp.pulseanddecibels.buzbiz.pjsip.BuzbizAccount;
 
 /**
  *
@@ -18,7 +29,11 @@ import com.vax.dev.lib.VaxSIPUserAgent;
  *
  */
 public class LibOperator {
-	private final VaxSIPUserAgent VAX;
+	private BuzBizCall currentCall;
+	private Endpoint pjsEndpoint;
+	private BuzbizAccount account;
+
+	private final String LOG_TAG = this.getClass().getSimpleName();
 
 	/** 最大ライン数 */
 	private static final int MAX_LINE = 1;
@@ -31,88 +46,16 @@ public class LibOperator {
 
 	/**
 	 * コンストラクタ
-	 * @param listener	Vax用のイベントリスナー
 	 */
-	public LibOperator(LibEventListener listener) {
-		VAX = new VaxSIPUserAgent(listener);
+	public LibOperator() {
+		//VAX = new VaxSIPUserAgent(listener);
 	}
 
 
 
-
-
-//	/**
-//	 * ライブラリーの初期化
-//	 */
-//	public void initVax(Context context) {
-//        VAX.DeselectAllVoiceCodec();
-//
-//        // 各コーデックの設定
-//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711U_CodecNo);
-//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711A_CodecNo);
-//        VAX.SetVoiceCodec(false, VaxSIPUserAgent.Opus_CodecNo);
-//
-//        // ---------------------------------------------------------
-//        // 注意
-//        //   コーデックを通信キャリアで分ける
-//        //   (softbankではVoIPが通信速度制限されるため)
-//        //
-//        //     softbank : iLBC
-//        //     その他   : GSM
-//        // ---------------------------------------------------------
-//        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-//        if (tm.getSimOperator().equals("44020")) {
-//            VAX.SetVoiceCodec(true, VaxSIPUserAgent.iLBC_CodecNo);
-//            VAX.SetVoiceCodec(false, VaxSIPUserAgent.GSM_CodecNo);
-//        } else {
-//            VAX.SetVoiceCodec(false, VaxSIPUserAgent.iLBC_CodecNo);
-//            VAX.SetVoiceCodec(true, VaxSIPUserAgent.GSM_CodecNo);
-//        }
-//
-//        // エコーキャンセラー
-//        VAX.SetEchoCancellation(true);
-//
-//        VAX.SpkSetSoftBoost(true);
-//        VAX.SpkSetAutoGain(2); // 2以外だと音質が悪くなる
-//
-//        VAX.MicSetSoftBoost(true);
-//        VAX.MicSetAutoGain(2); // 2以外だと音質が悪くなる
-//
-//        VAX.EnableKeepAlive(10);
-//    }
-
-
-
-
-
-    /**
-     * ライブラリーの初期化
-     */
-    public void initVax(Context context) {
-        VAX.DeselectAllVoiceCodec();
-
-        Setting setting = new Setting();
-
-        // 各コーデックの設定
-        VAX.SetVoiceCodec(setting.loadG711U(context), VaxSIPUserAgent.G711U_CodecNo);
-        VAX.SetVoiceCodec(false, VaxSIPUserAgent.G711A_CodecNo);
-        VAX.SetVoiceCodec(setting.loadOpus(context),  VaxSIPUserAgent.Opus_CodecNo);
-        VAX.SetVoiceCodec(setting.loadIlbc(context),  VaxSIPUserAgent.iLBC_CodecNo);
-        VAX.SetVoiceCodec(setting.loadGSM(context),   VaxSIPUserAgent.GSM_CodecNo);
-
-        // エコーキャンセラー
-        VAX.SetEchoCancellation(true);
-
-        // スピーカー
-        VAX.SpkSetSoftBoost(setting.loadSpkSoftBoost(context));
-        VAX.SpkSetAutoGain(setting.loadSpkAutoGain(context));
-
-        // マイク
-        VAX.MicSetSoftBoost(setting.loadMicSoftBoost(context));
-        VAX.MicSetAutoGain(setting.loadMicAutoGain(context));
-
-        VAX.EnableKeepAlive(10);
-    }
+	public void init() throws Exception {
+		System.loadLibrary("pjsua2");
+	}
 
 
 
@@ -123,15 +66,45 @@ public class LibOperator {
 //		Log.e(Util.LOG_TAG,"  VAX操作用クラス.setKey  ");
 
         // ライセンスキーを設定
-        boolean b = VAX.SetLicenceKey(licenceKey);
-        if (!b) {
-            throw new RuntimeException("ライセンスキー登録に失敗");
-        }
+//        boolean b = VAX.SetLicenceKey(licenceKey);
+//        if (!b) {
+//            throw new RuntimeException("ライセンスキー登録に失敗");
+//        }
     }
 
 
+	private void initEndPoint() throws Exception {
+		Log.e(LOG_TAG, "initEndPoint 1");
+		pjsEndpoint = new Endpoint();
+		pjsEndpoint.libCreate();
 
+		EpConfig epConfig = new EpConfig();
+		epConfig.getLogConfig().setLevel(5);
+		epConfig.getUaConfig().setMaxCalls(4);
+		epConfig.getMedConfig().setSndClockRate(16000);
 
+		pjsEndpoint.libInit(epConfig);
+		epConfig.delete();
+		pjsEndpoint.codecSetParam("gsm/8000", null);
+		// Create SIP transport. Error handling sample is shown
+		TransportConfig sipTpConfig = new TransportConfig();
+		sipTpConfig.setPort(56131);
+		pjsEndpoint.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
+		sipTpConfig.delete();
+		// Start the library
+		pjsEndpoint.libStart();
+		Log.e(LOG_TAG, "initEndPoint 2");
+	}
+
+	private void deinitEndPoint() throws Exception {
+		Log.e(LOG_TAG, "deInitEndPoint 1");
+		pjsEndpoint.libDestroy();
+		if(pjsEndpoint != null) {
+			pjsEndpoint.delete();
+		}
+		pjsEndpoint = null;
+		Log.e(LOG_TAG, "deInitEndPoint 2");
+	}
 
 	/**
 	 * ログイン
@@ -143,15 +116,36 @@ public class LibOperator {
 	public boolean login(String userName,
 						 String userPassword,
 						 String server) {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.login  ");
 
-		if (VAX.VaxIsOnline() == false) {
-			VAX.VaxInit(userName, userName, userName, userPassword, server, server, true, MAX_LINE);
-		} else {
-			MainService.me.startStayService(R.drawable.login_status_icon);
+		Log.e(LOG_TAG,"login 1");
+
+		try {
+			initEndPoint();
+
+			AccountConfig accountConfig = new AccountConfig();
+			accountConfig.setIdUri("sip:"+userName+"@"+server);
+			accountConfig.getRegConfig().setRegistrarUri("sip:"+server);
+			AuthCredInfo cred = new AuthCredInfo("digest", "*", userName, 0, userPassword);
+			accountConfig.getSipConfig().getAuthCreds().add(cred);
+			// Create the account
+			account = new BuzbizAccount();
+			account.create(accountConfig);
+			PresenceStatus ps = new PresenceStatus();
+			ps.setStatus(pjsua_buddy_status.PJSUA_BUDDY_STATUS_ONLINE);
+			account.setOnlineStatus(ps);
+			MainService.setEventLoginSuccess();
+			Log.e(LOG_TAG, "login 2");
+			ps.delete();
+			cred.delete();
+			accountConfig.delete();
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			account.delete();
+			MainService.setEventLoginFailure();
 		}
 
-		return VAX.VaxIsOnline();
+		return false;
 	}
 
 
@@ -162,7 +156,9 @@ public class LibOperator {
 	 * 再ログインログイン
 	 */
 	public boolean reLogin() {
-		return VAX.reLogin();
+//		return VAX.reLogin();
+		//TODO : Re-Login
+		return false;
 	}
 
 
@@ -173,16 +169,22 @@ public class LibOperator {
 	 * ログオフ
 	 * @return	結果
 	 */
-	public boolean logout(){
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.logoff  ");
-
-		if (VAX.VaxIsOnline()) {
-			VAX.VaxUnInit();
-		} else {
-			MainService.me.startStayService(R.drawable.logout_status_icon);
+	public void logout(){
+		Log.e(LOG_TAG, "  PJSIP操作用クラス.logoff  ");
+		if(account != null) {
+			account.delete();
+		}
+		if(currentCall != null) {
+			currentCall.delete();
 		}
 
-		return VAX.VaxIsOnline();
+		// Explicitly destroy and delete endpoint
+		Runtime.getRuntime().gc();
+		try {
+			deinitEndPoint();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -194,22 +196,41 @@ public class LibOperator {
 	 * @return
 	 */
 	public boolean isLogined() {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.isLogined  ");
+		Log.d(LOG_TAG, "  PJSIP操作用クラス.isLogined  ");
 
-		return VAX.VaxIsOnline();
+//		return VAX.VaxIsOnline();
+		try {
+			if(account != null) {
+				AccountInfo info = account.getInfo();
+				boolean isLoggedIn = info.getOnlineStatus();
+				info.delete();
+				Log.d(LOG_TAG,"Logged in? : "+isLoggedIn);
+				return isLoggedIn;
+			}
+		} catch (Exception e) {
+			//do nothing
+		}
+		Log.d(LOG_TAG, "Not logged in");
+		return false;
 	}
-
-
-
 
 
 	/**
 	 * 着信に応答する
 	 */
-	public void anserCall(String incomingCallId) {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.anserCall  ");
-
-		VAX.AcceptCall(MY_LINE, incomingCallId, -1, -1);
+	public void answerCall(BuzBizCall call) {
+		Log.e(LOG_TAG, "answerCall 1");
+		currentCall = call;
+		CallOpParam callOpParam = new CallOpParam();
+		callOpParam.setStatusCode(pjsip_status_code.PJSIP_SC_OK);
+		try {
+			currentCall.answer(callOpParam);
+		} catch (Exception e) {
+			currentCall.delete();
+			e.printStackTrace();
+		}
+		callOpParam.delete();
+		Log.e(LOG_TAG, "answerCall 2");
 	}
 
 
@@ -218,12 +239,19 @@ public class LibOperator {
 
 	/**
 	 * 着信を拒否する
-	 * @param incomingCallId 着信拒否するCallId
 	 */
-	public void rejectCall(String incomingCallId) {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.rejectCall  ");
-
-		VAX.RejectCall(incomingCallId);
+	public void rejectCall(BuzBizCall call) {
+		Log.e(LOG_TAG, "rejectCall 1");
+		CallOpParam callOpParam = new CallOpParam();
+		callOpParam.setStatusCode(pjsip_status_code.PJSIP_SC_DECLINE);
+		try {
+			call.hangup(callOpParam);
+		} catch (Exception e) {
+			call.delete();
+			e.printStackTrace();
+		}
+		callOpParam.delete();
+		Log.e(LOG_TAG, "rejectCall 2");
 	}
 
 
@@ -234,11 +262,27 @@ public class LibOperator {
 	 * 架電開始
 	 * @param telNum	架電先の電話番号
 	 */
-	public void startCall(TelNumber telNum) {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.startCall  ");
+	public void startCall(TelNumber telNum, Context context) {
+		Log.e(LOG_TAG, "startCall 1");
+		currentCall = new BuzBizCall(account);
+		CallOpParam callOpParam = new CallOpParam(true);
+		try {
+			Setting setting = new Setting();
+			String sipServer;
 
-		String called = telNum.getBaseString();
-		VAX.DialCall(MY_LINE, called, -1, -1);
+			if (setting.isExistSavedLocalServerInfo(context)) {
+				sipServer = setting.loadLocalServerDomain(context);
+			} else {
+				sipServer = setting.loadRemoteServerDomain(context);
+			}
+			currentCall.makeCall("sip:" + telNum.getBaseString() + "@" + sipServer, callOpParam);
+		} catch (Exception e) {
+			currentCall.delete();
+			e.printStackTrace();
+			return;
+		}
+		callOpParam.delete();
+		Log.e(LOG_TAG, "startCall 2");
 	}
 
 
@@ -249,24 +293,18 @@ public class LibOperator {
 	 * 通話終了
 	 */
 	public void endCall() {
-//		Log.e(Util.LOG_TAG,"  VAX操作用クラス.endCall  ");
-
-		Log.e("LibOperator", "1");
-		VAX.Disconnect(MY_LINE);
-		Log.e("LibOperator", "2");
+		Log.d(LOG_TAG, "endCall");
+		if(currentCall != null) {
+			CallOpParam prm = new CallOpParam();
+			prm.setStatusCode(pjsip_status_code.PJSIP_SC_DECLINE);
+			try {
+				currentCall.hangup(prm); //only need to do when the user manually hangs up
+				currentCall = null;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
-
-
-
-
-
-	/**
-	 * マイクを終了させる
-	 */
-	public void closeMic() {
-		VAX.CloseMic();
-	}
-
 
 
 
@@ -274,32 +312,36 @@ public class LibOperator {
 	/**
 	 * 保留
 	 */
-	public void hold(final Context context) {
-//		Log.e(Util.LOG_TAG, "  VAX操作用クラス.hold  ");
+	public void hold(Context context) {
+		Log.e(LOG_TAG, "hold");
+		CallOpParam prm = new CallOpParam();
+		prm.setStatusCode(pjsip_status_code.PJSIP_SC_OK);
+		try {
+			Setting setting = new Setting();
+			String sipServer;
 
-		// 通話中でない場合は終了
-		if (VAX.IsLineConnected(MY_LINE) == false){
-			return;
+			if (setting.isExistSavedLocalServerInfo(context)) {
+				sipServer = setting.loadLocalServerDomain(context);
+			} else {
+				sipServer = setting.loadRemoteServerDomain(context);
+			}
+			//transfer to "parking room" on server
+			currentCall.xfer("sip:700@" + sipServer, prm);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		prm.delete();
 
-		// 保留パークに転送し終了
-//		VAX.TransferCallEx(MY_LINE, "*2");
-		VAX.TransferCallEx(MY_LINE, "700");
-		VAX.Disconnect(MY_LINE);
-	}
-
-
-
+}
 
 
 	/**
 	 * DTMFを送信する
 	 * @param dtmfCode	送信するDTMFコード
 	 */
-	public void sendDtmf(DtmfCode dtmfCode) {
-		VAX.DigitDTMF(MY_LINE, dtmfCode.getDtmfInt());
+	public void sendDtmf(DtmfCode dtmfCode) throws Exception {
+		currentCall.dialDtmf(dtmfCode.getDtmfString());
 	}
-
 
 
 
@@ -309,11 +351,9 @@ public class LibOperator {
 	 * @param muteFlag	ミュートのスイッチ
 	 */
 	public void mute(final boolean muteFlag) {
-		new Thread(new Runnable() {
-			public void run() {
-				VAX.MuteLineMIC(MY_LINE, muteFlag);
-			}
-		}).start();
+		if(currentCall != null) {
+			currentCall.muteMic(muteFlag);
+		}
 	}
 
 

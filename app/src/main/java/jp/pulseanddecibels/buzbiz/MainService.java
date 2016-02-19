@@ -1,19 +1,5 @@
 package jp.pulseanddecibels.buzbiz;
 
-import io.fabric.sdk.android.Fabric;
-import jp.pulseanddecibels.buzbiz.data.LoginStatus;
-import jp.pulseanddecibels.buzbiz.models.JsonParser;
-import jp.pulseanddecibels.buzbiz.models.LibEventListener;
-import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
-import jp.pulseanddecibels.buzbiz.util.Util;
-import jp.pulseanddecibels.buzbiz.data.TelNumber;
-import jp.pulseanddecibels.buzbiz.models.IncomingCallControl;
-import jp.pulseanddecibels.buzbiz.models.LibOperator;
-import jp.pulseanddecibels.buzbiz.models.LoginChecker;
-import jp.pulseanddecibels.buzbiz.models.ProximitySensorControl;
-import jp.pulseanddecibels.buzbiz.models.VibratorControl;
-import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -30,6 +16,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 
+import org.pjsip.pjsua2.CallInfo;
+
+import io.fabric.sdk.android.Fabric;
+import jp.pulseanddecibels.buzbiz.data.LoginStatus;
+import jp.pulseanddecibels.buzbiz.data.TelNumber;
+import jp.pulseanddecibels.buzbiz.models.IncomingCallControl;
+import jp.pulseanddecibels.buzbiz.models.JsonParser;
+import jp.pulseanddecibels.buzbiz.models.LibOperator;
+import jp.pulseanddecibels.buzbiz.models.LoginChecker;
+import jp.pulseanddecibels.buzbiz.models.ProximitySensorControl;
+import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
+import jp.pulseanddecibels.buzbiz.models.VibratorControl;
+import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
+import jp.pulseanddecibels.buzbiz.pjsip.BuzBizCall;
+import jp.pulseanddecibels.buzbiz.util.Util;
+
 
 
 
@@ -44,7 +46,7 @@ public class MainService extends Service {
 	//------------------------------------------------------------------------
 	// 現在のキーパッド画面の状態
 	//------------------------------------------------------------------------
-	static KeyPadStates curentKaypadScreen = KeyPadStates.NOMAL;
+	static KeyPadStates currentKeypadScreen = KeyPadStates.NOMAL;
 
 	//------------------------------------------------------------------------
 	// 現在の画面状態
@@ -68,6 +70,7 @@ public class MainService extends Service {
 	}
 
 	static ScreenStates CurentScreenState = ScreenStates.COVER;
+	private String LOG_TAG = getClass().getSimpleName();
 
 
 
@@ -101,15 +104,15 @@ public class MainService extends Service {
 	public void onCreate() {
 		super.onCreate();
         Fabric.with(this, new Crashlytics());
-//		Log.e(Util.LOG_TAG,"  メインサービス.onCreate  ");
+		Log.d(LOG_TAG, "onCreate");
 
 		// ログアウト状態に戻す
 		new LoginStatus(LoginStatus.OFFLINE).save(getApplicationContext());
 
         // 電話機能を初期化
         try {
-            LIB_OP.initVax(getApplicationContext());
-        } catch (UnsatisfiedLinkError ex) {
+            LIB_OP.init();
+        } catch (Exception ex) {
             String msg = "お使いの端末では、BUZBIZを使えない可能性がございます。";
             MainActivity.displayMessage(getApplicationContext(), msg);
         }
@@ -125,7 +128,7 @@ public class MainService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 //		Log.e(Util.LOG_TAG,"  メインサービス.onStartCommand  ");
-
+		Log.d(LOG_TAG, "onStartCommand");
 		me = this;
 
 		// インテントのメッセージに対する処理を実行
@@ -181,6 +184,7 @@ public class MainService extends Service {
 	 */
 //	@SuppressWarnings("deprecation")
 	public void startStayService(int iconNum) {
+		Log.d(LOG_TAG, "startStayService");
 		// 既に常駐化している場合は終了
 		if (stayServiceFlag) {
 			return;
@@ -219,6 +223,7 @@ public class MainService extends Service {
 	 * サービスの常駐化終了
 	 */
 	public void stopStayService(){
+		Log.d(LOG_TAG, "stopStayService");
 //		Log.e(Util.LOG_TAG,"  メインサービス.stopStayService  ");
 
 
@@ -248,15 +253,15 @@ public class MainService extends Service {
 	 */
 	public static boolean isCalling(){
 
-//		if (curentKaypadScreen == CALLING_NO_KAYPUD ||
-//			curentKaypadScreen == CALLING_KAYPUD) {
+//		if (currentKeypadScreen == CALLING_NO_KAYPUD ||
+//			currentKeypadScreen == CALLING_KAYPUD) {
 //			return true;
 //		}
 //
 //		return false;
 		//TODO
 
-		if(curentKaypadScreen == KeyPadStates.NOMAL) return false;
+		if(currentKeypadScreen == KeyPadStates.NOMAL) return false;
 
 		return true;
 	}
@@ -270,6 +275,7 @@ public class MainService extends Service {
 	 */
 	public static void setEventLoginSuccess() {
 //		Log.e(Util.LOG_TAG, "  メインサービス.onRegisterSuccess  ");
+		Log.d("MainService", "setEventLoginSuccess");
 
 		// ログイン状態を保存
 		new LoginStatus(LoginStatus.ONLINE).save(me.getApplicationContext());
@@ -307,7 +313,7 @@ public class MainService extends Service {
 	 * SIPサーバーへの登録が失敗したときの処理
 	 */
 	public static void  setEventLoginFailure() {
-//		Log.e(Util.LOG_TAG, "  メインサービス.onRegisterFailure  ");
+		Log.e("MainService", "setEventLoginFailure");
 
 		// メッセージを表示
 		MainActivity.displayMessage(me.getApplicationContext(), "ログインに失敗しました");
@@ -321,56 +327,24 @@ public class MainService extends Service {
 
 
 
-	/** 通話終了のメソッドが2度走らないように管理 */
-	private static boolean callFlag = false;
-
-
 	/**
 	 * 通話開始時の処理
 	 */
 	public static void setEventStartCall() {
-//		Log.e(Util.LOG_TAG, "  メインサービス.onInviteAnswered  ");
-
+		Log.d("MainService", "setEventStartCall");
+		// 近接センサーをスタートさせる
+		//sometimes causes crash because it's initialising on a different thread to PJSIP
+		ProximitySensorControl.start(me.getApplicationContext());
 
 		// 音を止める
 		SoundPlayer.INSTANCE.stop();
 
-		// 近接センサーをスタートさせる
-		ProximitySensorControl.start(me.getApplicationContext());
-
 		// 通話時間用タイマーをスタート
-		KaypadScreen.startTimer();
+		KeypadScreen.startTimer();
 
 //		// ミュート・スピーカーボタンUIを使用可能に設定
-//		KaypadScreen.startUseingUiMuteAndSpeakerButton();
-
-		callFlag = true;
+		KeypadScreen.startUsingUiMuteAndSpeakerButton();
 	}
-
-
-
-
-	private void onIncomingCall(IncomingCallItem callItem){
-		boolean isFirstIncomingCall = !IncomingCallControl.INSTANCE.isDuringIncomingCall();
-		IncomingCallControl.INSTANCE.addItem(callItem);
-
-		Log.e("onIncomingCall", "onIncomingCall1");
-
-		// 通話中は、画面表示はしない
-		if (isCalling()) {
-			return;
-		}
-
-		// 初回着信時は、着信画面を表示
-		if (isFirstIncomingCall) {
-			me.showIncomingCallActivity();
-
-			// 2回め以降の着信時は、着信画面を更新
-		} else {
-			IncomingCallActivity.resetIncomingCallList();
-		}
-	}
-
 
 
 
@@ -380,29 +354,26 @@ public class MainService extends Service {
 	 */
 	public static void setEventEndCall() {
 
-		Log.e("setEventEndCall", "setEventEndCall");
+		Log.d("MainService", "setEventEndCall");
 		//TODO フラグの存在意義を調査
-//		if (!callFlag) {
-//			return;
-//		}
-//		callFlag = false;
 
 		// キーパッド画面の状態を通常画面とし保存
-//		MainService.curentKaypadScreen = NOMAL;
-		curentKaypadScreen = KeyPadStates.NOMAL;
-
-		// 近接センサーをストップさせる
-		ProximitySensorControl.stop(me.getApplicationContext());
+//		MainService.currentKeypadScreen = NOMAL;
+		currentKeypadScreen = KeyPadStates.NOMAL;
 
 		// 念のため、着信画面を終了させる
 		IncomingCallActivity.end();
 
 		// 通話時間用タイマーを止める
-		KaypadScreen.stopTimer();
+		KeypadScreen.stopTimer();
 
-		if (MainActivity.me != null && MainActivity.me.isFinishing() == false) {
+		if (MainActivity.me != null && !MainActivity.me.isFinishing()) {
 			// 1秒ぐらい結果を表示させ通話終了
-			MainActivity.me.firstScreen.kaypadScreen.displayInformationWhenCallEnd();
+			MainActivity.me.runOnUiThread(new Runnable() {
+				public void run() {
+					MainActivity.me.firstScreen.keypadScreen.displayInformationWhenCallEnd();
+				}
+			});
 		}
 
 		// 着信が有れば着信画面へ
@@ -413,10 +384,11 @@ public class MainService extends Service {
 
 		// 終了音を流す
 		SoundPlayer.INSTANCE.startSyuuryou(me.getApplicationContext());
+
+		// 近接センサーをストップさせる
+		//sometimes causes crash because it's on a different thread to PJSIP
+		ProximitySensorControl.stop(me.getApplicationContext());
 	}
-
-
-
 
 
 	/**
@@ -441,17 +413,110 @@ public class MainService extends Service {
 			return false;
 		}
 
-// *** 下記は実施しないことになった ***
-//		// 他の端末からログインしていれば失敗
-//		if(!Util.checkOneUserLogin(mContext)){
-//			return false;
-//		}
-
 		return true;
 	}
 
+	private void onIncomingCall(IncomingCallItem callItem){
+		Log.d("MainService", "onIncomingCall 1");
+		boolean isFirstIncomingCall = !IncomingCallControl.INSTANCE.isDuringIncomingCall();
+		IncomingCallControl.INSTANCE.addItem(callItem);
 
+		// 通話中は、画面表示はしない
+		if (isCalling()) {
+			return;
+		}
 
+		// 初回着信時は、着信画面を表示
+		if (isFirstIncomingCall) {
+			me.showIncomingCallActivity();
+
+			// 2回め以降の着信時は、着信画面を更新
+		} else {
+			IncomingCallActivity.resetIncomingCallList();
+		}
+	}
+
+	public void onIncomingCall(final BuzBizCall call) {
+		Log.d(LOG_TAG, "onIncomingCall 2");
+
+		try {
+			CallInfo info = call.getInfo();
+			final String callId = Integer.toString(call.getId());
+			final String remoteContact = info.getRemoteContact();
+			final String remoteUri = info.getRemoteUri();
+			final String localUri = info.getLocalUri();
+			String callIdString = info.getCallIdString(); //maybe can be used for something
+			//force delete to ensure we don't get PJSIP non-registered thread crash
+			info.delete();
+
+			//"2809" <sip:2809@192.168.1.230>
+			final TelNumber telNum = new TelNumber(remoteContact.substring(remoteContact.indexOf(":")+1, remoteContact.indexOf("@")));
+
+			final Response.ErrorListener err = new Response.ErrorListener() {
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					Log.e(LOG_TAG, "onErrorResponse");
+					IncomingCallItem callItem =
+							new IncomingCallItem(callId, remoteContact, telNum, remoteUri, localUri, remoteContact, call);
+					me.onIncomingCall(callItem);
+				}
+			};
+
+			// 成功時
+			final Response.Listener ok = new Response.Listener() {
+				@Override
+				public void onResponse(final Object response) {
+					Log.d(LOG_TAG, "Response.Listener ok1");
+					String name = null;
+					try {
+						String json = response.toString();
+						name = new JsonParser().parceJsonForSerchName(json, telNum);
+					} catch (Exception ex) { }
+					if(TextUtils.isEmpty(name)){
+						name = remoteContact;
+					}
+
+					IncomingCallItem callItem =
+							new IncomingCallItem(callId, remoteContact, telNum, remoteUri, localUri, name, call);
+					me.onIncomingCall(callItem);
+					Log.d(LOG_TAG, "Response.Listener ok2");
+				}
+			};
+
+			Log.d(LOG_TAG, "onIncomingCall 3");
+			VolleyOperator.resolverName(me.getApplicationContext(), telNum, ok, err);
+//			//crashes if we don't add this Thread.sleep()
+//			Thread.sleep(1000);
+			Log.d(LOG_TAG, "onIncomingCall 4");
+			//if we don't gc before answering the call, and gc happens when call is answered, the app will crash!
+			System.gc();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void OnIncomingCallRingingStop() {
+//			android.util.Log.e(Util.LOG_TAG, "--OnIncomingCallRingingStop--");
+
+		// 切れた着信を削除
+		IncomingCallControl.INSTANCE.clearCallList();
+
+		// 着信が無くなっていれば、
+		if (!IncomingCallControl.INSTANCE.isDuringIncomingCall()) {
+			// 呼び出し用バイブレーター終了
+			VibratorControl.stop(me.getApplicationContext());
+
+			// 着信音を止める
+			SoundPlayer.INSTANCE.stop();
+
+			// 着信画面を終了させる
+			IncomingCallActivity.end();
+
+			// 他の着信が残っていれば、着信リストを更新
+		} else {
+			IncomingCallActivity.resetIncomingCallList();
+		}
+	}
 
 
 	/**
@@ -469,371 +534,6 @@ public class MainService extends Service {
 	}
 
 
-
-
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-    /**
-     * Vaxライブラリーのイベントリスナー
-     */
-	protected static final LibEventListener listenew = new LibEventListener(){
-		/**
-		 * ログイン成功時
-		 */
-		public void OnSuccessToRegister() {
-//			Log.e(Util.LOG_TAG, "--OnSuccessToRegister--");
-
-			setEventLoginSuccess();
-		}
-
-
-
-
-
-		public void OnSuccessToReRegister() {
-//			Log.e(Util.LOG_TAG, "--OnSuccessToReRegister--");
-		}
-
-		public void OnSuccessToUnRegister() {
-//			Log.e(Util.LOG_TAG, "--OnSuccessToUnRegister--");
-		}
-
-		public void OnTryingToRegister() {
-//			Log.e(Util.LOG_TAG, "--OnTryingToRegister--");
-		}
-
-		public void OnTryingToReRegister() {
-//			Log.e(Util.LOG_TAG, "--OnTryingToReRegister--");
-		}
-
-		public void OnTryingToUnRegister() {
-//			Log.e(Util.LOG_TAG, "--OnTryingToUnRegister--");
-		}
-
-
-
-
-
-		/**
-		 * ログイン失敗
-		 */
-		public void OnFailToRegister(int nStatusCode, String sReasonPhrase) {
-//			Log.e(Util.LOG_TAG, "--OnFailToRegister--");
-//			android.util.Log.e(Util.LOG_TAG, "--StatusCode--" + nStatusCode);
-//			android.util.Log.e(Util.LOG_TAG, "--ReasonPhrase--" + sReasonPhrase);
-			setEventLoginFailure();
-		}
-
-
-
-
-
-		public void OnFailToReRegister(int nStatusCode, String sReasonPhrase) {
-//			Log.e(Util.LOG_TAG, "--OnFailToReRegister--");
-		}
-
-		public void OnFailToUnRegister(int nStatusCode, String sReasonPhrase) {
-//			Log.e(Util.LOG_TAG, "--OnFailToUnRegister--");
-		}
-
-		public void OnAccepting(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnAccepting--");
-		}
-
-
-
-
-
-		/**
-		 * こちら側からの通話終了時の処理
-		 */
-		public void OnEndCall(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnEndCall--");
-
-			setEventEndCall();
-		}
-
-
-
-
-
-		/**
-		 * 架電開始時の処理
-		 */
-		public void OnConnecting(int nLineNo) {
-
-//			Log.e(Util.LOG_TAG, "--OnConnecting--");
-		}
-
-		/**
-		 * 架電開始時にOnConnectingの次の処理
-		 */
-		public void OnDialing(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnDialing--");
-		}
-
-
-
-
-
-		/**
-		 * 架電時のSIP応答をうけっとた時の処理
-		 */
-		public void OnProvisionalResponse(int nLineNo, int nStatusCode, String sReasonPharase) {
-//			Log.e(Util.LOG_TAG, "--OnProvisionalResponse--");
-
-			//家電時にボタンを押せるように変更
-			KaypadScreen.startUseingUiMuteAndSpeakerButton();
-
-			// ここで180 音をスタート   183 音をストップ
-			switch (nStatusCode) {
-			case 180:
-				SoundPlayer.INSTANCE.startHassin(me.getApplicationContext());
-				break;
-
-			case 183:
-				SoundPlayer.INSTANCE.stop();
-				break;
-			}
-		}
-
-
-
-
-
-		public void OnTryingToHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnTryingToHold--");
-		}
-
-		public void OnTryingToUnHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnTryingToUnHold--");
-		}
-
-		public void OnFailToHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnFailToHold--");
-		}
-
-		public void OnFailToUnHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnFailToUnHold--");
-		}
-
-		public void OnSuccessToHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnSuccessToHold--");
-		}
-
-		public void OnSuccessToUnHold(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnSuccessToUnHold--");
-		}
-
-		public void OnFailToConnect(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnFailToConnect--");
-		}
-
-
-
-
-
-		/**
-		 * 着信時	（※ 着信時１番最初に走る）
-		 * @param	sCallId			各着信コールの一意の識別子
-		 * @param	sDisplayName	表示名
-		 * @param	sUserName		ユーザー名
-		 * @param	sFromURI		FromURI
-		 * @param	sToURI			ToURI
-		 */
-		public void OnIncomingCall(final String sCallId,
-								   final String sDisplayName,
-								   final String sUserName,
-								   final String sFromURI,
-								   final String sToURI) {
-//			android.util.Log.e(Util.LOG_TAG, "--OnIncomingCall--");
-
-
-			// 不審な番号(100)からかかってくることがあるので弾く
-			if(IncomingCallControl.checkBugTelNummber(new TelNumber(sUserName))){
-				return;
-			}
-
-			final TelNumber telNum = new TelNumber(sUserName);
-
-			// 失敗時
-			final Response.ErrorListener err = new Response.ErrorListener() {
-				@Override
-				public void onErrorResponse(VolleyError error) {
-					IncomingCallItem callItem =
-							new IncomingCallItem(sCallId, sDisplayName, telNum, sFromURI, sToURI, sUserName);
-					me.onIncomingCall(callItem);
-				}
-			};
-
-			// 成功時
-			final Response.Listener ok = new Response.Listener() {
-				@Override
-				public void onResponse(final Object response) {
-					String name = null;
-					try {
-						String json = response.toString();
-						name = new JsonParser().parceJsonForSerchName(json, telNum);
-					} catch (Exception ex) { }
-					if(TextUtils.isEmpty(name)){
-						name = sUserName;
-					}
-
-					IncomingCallItem callItem =
-							new IncomingCallItem(sCallId, sDisplayName, telNum, sFromURI, sToURI, name);
-					me.onIncomingCall(callItem);
-				}
-			};
-
-			VolleyOperator.resolverName(me.getApplicationContext(), telNum, ok, err);
-		}
-
-
-
-
-
-		/**
-		 * 着信リンギングスタート時
-		 */
-		public void OnIncomingCallRingingStart(String sCallId) {
-//			Log.e(Util.LOG_TAG, "--OnIncomingCallRingingStart--");
-		}
-
-
-
-
-
-		/**
-		 * 着信リンギングストップ時
-		 */
-		public void OnIncomingCallRingingStop(String sCallId) {
-//			android.util.Log.e(Util.LOG_TAG, "--OnIncomingCallRingingStop--");
-
-			// 切れた着信を削除
-			IncomingCallControl.INSTANCE.removeItem(sCallId);
-
-			// 着信が無くなっていれば、
-			if (!IncomingCallControl.INSTANCE.isDuringIncomingCall()) {
-				// 呼び出し用バイブレーター終了
-				VibratorControl.stop(me.getApplicationContext());
-
-				// 着信音を止める
-				SoundPlayer.INSTANCE.stop();
-
-				// 着信画面を終了させる
-				IncomingCallActivity.end();
-
-			// 他の着信が残っていれば、着信リストを更新
-			} else {
-				IncomingCallActivity.resetIncomingCallList();
-			}
-		}
-
-
-
-
-
-		/**
-		 * 通話開始時の処理
-		 */
-		public void OnConnected(int nLineNo, String sTxRTPIP, int nTxRTPPort, String sCallId) {
-//			Log.e(Util.LOG_TAG, "--OnConnected--");
-
-			setEventStartCall();
-		}
-
-
-
-
-
-		/**
-		 * 架電に失敗した場合の処理
-		 */
-		public void OnFailureResponse(int nLineNo, int nStatusCode, String sReasonPharase) {
-//			Log.e(Util.LOG_TAG, "--OnFailureResponse--");
-
-			Context context = me.getApplicationContext();
-
-			// キーパッド画面の状態を通常画面とし保存
-//			MainService.curentKaypadScreen = NOMAL;
-			curentKaypadScreen = KeyPadStates.NOMAL;
-
-			// 近接センサーをストップさせる
-			ProximitySensorControl.stop(context);
-
-			// 音を止める
-			SoundPlayer.INSTANCE.stop();
-
-			// マイクを終了
-			LIB_OP.closeMic();
-
-			switch (nStatusCode) {
-			case 404:
-				MainActivity.displayMessage(context, "お掛けになった電話番号は、存在しません");
-				break;
-
-			case 486:
-				MainActivity.displayMessage(context, "ご利用中です。お掛け直し下さい");
-				break;
-			}
-
-
-			if (MainActivity.me != null && MainActivity.me.isFinishing() == false) {
-				MainActivity.me.firstScreen.kaypadScreen.displayInformationWhenCallEnd();
-			}
-		}
-
-
-
-
-
-		public void OnRedirectResponse(int nLineNo, int nStatusCode, String sReasonPharase, String sContact) {
-//			Log.e(Util.LOG_TAG, "--OnRedirectResponse--");
-		}
-
-
-
-
-
-		/**
-		 * 相手側からの通話開始時の処理
-		 */
-		public void OnDisconnectCall(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnDisconnectCall--");
-
-			setEventEndCall();
-		}
-
-
-
-
-
-		public void OnCallTransferAccepted(int nLineNo) {
-//			Log.e(Util.LOG_TAG, "--OnCallTransferAccepted--");
-		}
-
-		public void OnFailToTransfer(int nLineNo, int nStatusCode, String sReasonPharase) {
-//			Log.e(Util.LOG_TAG, "--OnFailToTransfer--");
-		}
-
-		public void OnIncomingDiagnostic(String sMsgSIP, String sFromIP, int nFromPort) {
-//			Log.e(Util.LOG_TAG, "--OnIncomingDiagnostic--");
-		}
-
-		public void OnOutgoingDiagnostic(String sMsgSIP, String sToIP, int nToPort) {
-//			Log.e(Util.LOG_TAG, "--OnOutgoingDiagnostic--");
-		}
-	};
-
-
-
-
-
-	/** Vax操作オブジェクト */
-	public final static LibOperator LIB_OP = new LibOperator(listenew);
+//	/** PJSIP操作オブジェクト */
+	public final static LibOperator LIB_OP = new LibOperator();
 }

@@ -5,7 +5,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import jp.pulseanddecibels.buzbiz.MainActivity;
-import jp.pulseanddecibels.buzbiz.KaypadScreen;
+import jp.pulseanddecibels.buzbiz.KeypadScreen;
 import jp.pulseanddecibels.buzbiz.MainService;
 
 /**
@@ -50,19 +50,19 @@ public class CallTimer {
 			@Override
 			public void run() {
 				if (!MainService.isCalling()) {
+					//used to cause a crash, so it was commented out. I've commented it back in, so I should check sometimes.
 					MainService.LIB_OP.endCall();
 					return;
 				}
-
 
 				long currentTime = System.currentTimeMillis();
 				long diff = currentTime - startTime;
 
 
 				if (diff >= 3600000) {
-					KaypadScreen.setDisplayCallerTimer(longTimeFormat.format(diff));
+					KeypadScreen.setDisplayCallerTimer(longTimeFormat.format(diff));
 				} else {
-					KaypadScreen.setDisplayCallerTimer(shortTimeFormat.format(diff));
+					KeypadScreen.setDisplayCallerTimer(shortTimeFormat.format(diff));
 				}
 
 				MainActivity.getHandler().postDelayed(this, 1000);

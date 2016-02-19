@@ -189,14 +189,14 @@ public class InternalTableScreen {
 			DialogInterface.OnClickListener yes = new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// 通話の情報を設定
-					KaypadScreen.setCallInformation("内線", callerName);
-
-					// 架電を実施
-					MainService.LIB_OP.startCall(telNum);
+					KeypadScreen.setCallInformation("内線", callerName);
 
 					// 通話中画面へ設定
-					MainActivity.me.firstScreen.kaypadScreen.setCallScreen();
+					MainActivity.me.firstScreen.keypadScreen.setCallScreen();
 					MainActivity.me.firstScreen.setKaypadScreenWhenStartCall();
+
+					// 架電を実施
+					MainService.LIB_OP.startCall(telNum, context);
 				}
 			};
 

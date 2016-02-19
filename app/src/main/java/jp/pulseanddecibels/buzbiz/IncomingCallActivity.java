@@ -1,6 +1,18 @@
 package jp.pulseanddecibels.buzbiz;
 
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.PowerManager;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ListView;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 
@@ -8,17 +20,6 @@ import io.fabric.sdk.android.Fabric;
 import jp.pulseanddecibels.buzbiz.models.IncomingCallControl;
 import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
 import jp.pulseanddecibels.buzbiz.models.VibratorControl;
-import jp.pulseanddecibels.buzbiz.util.Util;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.widget.ListView;
-
-import com.crashlytics.android.Crashlytics;
 
 
 
@@ -33,8 +34,8 @@ import com.crashlytics.android.Crashlytics;
 public class IncomingCallActivity extends Activity {
 
 	static IncomingCallActivity me;
-
-
+	String LOG_TAG = this.getClass().getSimpleName();
+	PowerManager.WakeLock wl;
 
 
 
@@ -42,9 +43,7 @@ public class IncomingCallActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-		Log.e("IncomingCallActivity", "  着信画面.onCreate  ");
-
-
+		Log.d(LOG_TAG, "onCreate  1");
 
 		// 自分を保存
 		me = this;
@@ -55,6 +54,7 @@ public class IncomingCallActivity extends Activity {
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);	// タイトルは非表示
 		setContentView(jp.pulseanddecibels.buzbiz.R.layout.incoming_call_screen);	// ビューを設定
+		Log.d("IncomingCallActivity", "onCreate  2");
 	}
 
 
@@ -64,7 +64,22 @@ public class IncomingCallActivity extends Activity {
 	@Override
 	public void onResume(){
 		super.onResume();
-//		Log.e(Util.LOG_TAG,"  着信画面.onResume  ");
+		Window window = this.getWindow();
+		window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+		window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
+		//wake up the screen on an incoming call
+		PowerManager pm= (PowerManager) getSystemService(Context.POWER_SERVICE);
+		if(wl == null) {
+			wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tag");
+		}
+		if(!wl.isHeld()) {
+			wl.acquire();
+		}
+
+
+		Log.d(LOG_TAG, "onResume  ");
 
 
 		// 呼び出し用バイブレーター開始
@@ -76,7 +91,7 @@ public class IncomingCallActivity extends Activity {
 		// 着信リストを設定
 		setIncomingCallList();
 
-		System.gc();
+		//System.gc();
 
 
 		// 着信が終わっている場合は終了
@@ -86,14 +101,19 @@ public class IncomingCallActivity extends Activity {
 	}
 
 
-
-
+	@Override
+	protected void onPause() {
+		super.onPause();
+		Log.d(LOG_TAG, "onPause  ");
+	}
 
 	@Override
-	public void onDestroy(){
-//		Log.e(Util.LOG_TAG,"  着信画面.onDestroy  ");
+	public void onDestroy() {
+		Log.d(LOG_TAG, "onDestroy  ");
 		me = null;
-
+		if(wl != null) {
+			wl.release();
+		}
 		// 呼び出し用バイブレーター終了
 		VibratorControl.stop(getApplicationContext());
 
@@ -153,7 +173,6 @@ public class IncomingCallActivity extends Activity {
 		Intent intentGoToMain = new Intent(getApplicationContext(), MainActivity.class);
 		intentGoToMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intentGoToMain);
-
 		// 本画面を終了
 		finish();
 	}
@@ -183,7 +202,6 @@ public class IncomingCallActivity extends Activity {
 
 		// 拒否
 		IncomingCallControl.INSTANCE.rejectAll();
-
 		// メイン画面に戻る
 		returnMainActivity();
 	}

@@ -70,8 +70,8 @@ public class CodecSettingActivity extends Activity {
 
         String msg = "設定の反映が完了しました。";
         try {
-            MainService.LIB_OP.initVax(getApplicationContext());
-        } catch (UnsatisfiedLinkError ex) {
+            MainService.LIB_OP.init();
+        } catch (Exception ex) {
             msg = "設定の反映に失敗しました。";
         }
         Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();

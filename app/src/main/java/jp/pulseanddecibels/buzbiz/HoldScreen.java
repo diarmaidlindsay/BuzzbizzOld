@@ -178,14 +178,14 @@ public class HoldScreen {
                     if(newItem.getCaller().equals(callerNum)){
 
                         // 通話の情報を設定
-                        KaypadScreen.setCallInformation(callerNum, caller);
-
-                        // 架電を実施
-                        MainService.LIB_OP.startCall(parkingNum);
+                        KeypadScreen.setCallInformation(callerNum, caller);
 
                         // 通話中画面へ設定
-                        MainActivity.me.firstScreen.kaypadScreen.setCallScreen();
+                        MainActivity.me.firstScreen.keypadScreen.setCallScreen();
                         MainActivity.me.firstScreen.setKaypadScreenWhenStartCall();
+
+                        // 架電を実施
+                        MainService.LIB_OP.startCall(parkingNum, context);
 
                         return;
                     }
@@ -407,7 +407,7 @@ public class HoldScreen {
                         if (MyFrameLayout.screenCapture != null) {
                             ((ImageView) ((Activity) context).findViewById(jp.pulseanddecibels.buzbiz.R.id.dummy_image)).setImageDrawable(null);
                             MyFrameLayout.screenCapture.recycle();
-                            System.gc();
+                            //System.gc();
                         }
 
 
@@ -425,7 +425,7 @@ public class HoldScreen {
                         }
 
                         tmpBitmap.recycle();
-                        System.gc();
+                        //System.gc();
 
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -37,7 +37,7 @@ public class SplashActivity extends Activity {
 
 		// メインActivityが残っている場合は終了させる
 		MainActivity.end();
-		System.gc();
+		//System.gc();
 
 		if (MainService.me == null) {
 			new Handler().postDelayed(run, 2000);

@@ -1,5 +1,6 @@
 package jp.pulseanddecibels.buzbiz;
 
+import jp.pulseanddecibels.buzbiz.pjsip.BuzBizCall;
 import jp.pulseanddecibels.buzbiz.util.Logger;
 import jp.pulseanddecibels.buzbiz.util.Util;
 import jp.pulseanddecibels.buzbiz.data.TelNumber;
@@ -21,6 +22,9 @@ public class IncomingCallItem {
 	public final String fromURI;
 	public final String toURI;
 
+	//if call is not answered, should we dispose of this?
+	public final BuzBizCall call;
+
 
 	/** 表示用ラベル */
 	public String label = Util.STRING_EMPTY;
@@ -37,7 +41,8 @@ public class IncomingCallItem {
 							TelNumber userName,
 							String fromURI,
 							String toURI,
-							String label) {
+							String label,
+							BuzBizCall call) {
 
 		this.callId 	 = callId;
 		this.displayName = displayName;
@@ -45,6 +50,7 @@ public class IncomingCallItem {
 		this.fromURI 	 = fromURI;
 		this.toURI 		 = toURI;
 		this.label 		 = label;
+		this.call	     = call;
 
 		// debug();
 	}
@@ -90,6 +96,7 @@ public class IncomingCallItem {
 									telNum,
 									fromURI,
 									toURI,
-									label);
+									label,
+								    call);
 	}
 }

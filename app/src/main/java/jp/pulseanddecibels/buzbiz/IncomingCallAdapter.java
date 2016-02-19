@@ -94,17 +94,17 @@ public class IncomingCallAdapter extends BaseAdapter {
 				// 通話情報を設定
 				CallInfo.ClearData();
 				CallInfo.INSTANCE.callerNumber = item.telNum.getBaseString();
-				KaypadScreen.setCallInformation(item.telNum.getBaseString(), item.label);
+				KeypadScreen.setCallInformation(item.telNum.getBaseString(), item.label);
 
 				// キーパッド画面を通話中に設定
-//				MainService.curentKaypadScreen = MainService.CALLING_NO_KAYPUD;
-				MainService.curentKaypadScreen = MainService.KeyPadStates.CALLING_NO_KAYPUD;
+//				MainService.currentKeypadScreen = MainService.CALLING_NO_KAYPUD;
+				MainService.currentKeypadScreen = MainService.KeyPadStates.CALLING_NO_KAYPUD;
 
 				// メイン画面に戻る
 				activity.returnMainActivity();
 
 				// 応答
-				IncomingCallControl.INSTANCE.anserTo(item.callId);
+				IncomingCallControl.INSTANCE.answerTo(item.callId, item.call);
 			}
 		};
 		((ImageButton) view.findViewById(jp.pulseanddecibels.buzbiz.R.id.answer_button)).setOnClickListener(answer);

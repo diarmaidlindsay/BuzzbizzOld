@@ -85,16 +85,16 @@ public class HistoryScreen {
 				public void onClick(DialogInterface dialog, int which) {
 					// 通話の情報を設定
 					if(telNum.isExternal()){
-						KaypadScreen.setCallInformation(telNum.getBaseString(), callerName);
+						KeypadScreen.setCallInformation(telNum.getBaseString(), callerName);
 					}else {
-						KaypadScreen.setCallInformation("内線", callerName);
+						KeypadScreen.setCallInformation("内線", callerName);
 					}
 
 					// 架電を実施
-					MainService.LIB_OP.startCall(telNum);
+					MainService.LIB_OP.startCall(telNum, context);
 
 					// 通話中画面へ設定
-					MainActivity.me.firstScreen.kaypadScreen.setCallScreen();
+					MainActivity.me.firstScreen.keypadScreen.setCallScreen();
 					MainActivity.me.firstScreen.setKaypadScreenWhenStartCall();
 				}
 			};

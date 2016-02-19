@@ -200,10 +200,10 @@ public class ExternalTableScreen {
 			DialogInterface.OnClickListener yes = new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
 					// 架電を実施
-					MainService.LIB_OP.startCall(telNum);
+					MainService.LIB_OP.startCall(telNum, context);
 
 					// 通話中画面へ設定
-					MainActivity.me.firstScreen.kaypadScreen.setCallScreen();
+					MainActivity.me.firstScreen.keypadScreen.setCallScreen();
 					MainActivity.me.firstScreen.setKaypadScreenWhenStartCall();
 				}
 			};

@@ -11,9 +11,11 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -48,7 +50,7 @@ public class MainActivity extends Activity {
     /** UI操作用ハンドラー */
     private static final Handler MAIN_HANDLER = new Handler();
 
-
+    private final String LOG_TAG = this.getClass().getSimpleName();
 
     /** レイアウトルート */
     @InjectView(jp.pulseanddecibels.buzbiz.R.id.parent_layout)
@@ -69,14 +71,20 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
+        Log.d(LOG_TAG, "onCreate 1");
+        Fabric.with(this, new Crashlytics());
+        Log.d(LOG_TAG, "onCreate 2");
         me = this;
 
         setEnableAdjustVolume();
-
+        Log.d(LOG_TAG, "onCreate 3");
         startMainService();
-
+        Log.d(LOG_TAG, "onCreate 4");
 
         ////////////////////////////////////////////////////////////////
         /////////////////////////// UIの設定 ///////////////////////////
@@ -88,37 +96,50 @@ public class MainActivity extends Activity {
 
         // タブの設定を取得
         MyFrameLayout.getTabSetting(getApplicationContext());
+        Log.d(LOG_TAG, "onCreate 5");
         // ビューを設定
         setContentView(jp.pulseanddecibels.buzbiz.R.layout.main);
         ButterKnife.inject(this);
+        Log.d(LOG_TAG, "onCreate 6");
         // タブの初期化
         MyFrameLayout.initTabSetting(this);
 
 
         // 通話状態であれば、枠を変更する
-//        if (MainService.curentKaypadScreen != MainService.NOMAL) {
-        if (MainService.curentKaypadScreen != MainService.KeyPadStates.NOMAL) {
+//        if (MainService.currentKeypadScreen != MainService.NOMAL) {
+        Log.d(LOG_TAG, "onCreate 7");
+        if (MainService.currentKeypadScreen != MainService.KeyPadStates.NOMAL) {
             setNormalWaku();
         }
+        Log.d(LOG_TAG, "onCreate 8");
+        login();
     }
 
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        login();
+        Log.d(LOG_TAG, "onResume");
     }
 
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
+    }
 
     @Override
     protected void onStop() {
+        Log.d(LOG_TAG, "onStop");
+        //this was causing a crash when turning the screen off using wakelock!!
         System.gc();
 
         super.onStop();
@@ -134,6 +155,7 @@ public class MainActivity extends Activity {
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent intent) {
         super.onActivityResult(reqCode, resultCode, intent);
+        Log.d(LOG_TAG, "onActivityResult");
 
         if (reqCode != MY_ID || resultCode != Activity.RESULT_OK) {
             return;
@@ -152,14 +174,14 @@ public class MainActivity extends Activity {
 
         // 電話番号が１つの場合
         if (telNums.length == 1) {
-            firstScreen.kaypadScreen.setInputNumber(telNums[0]);
+            firstScreen.keypadScreen.setInputNumber(telNums[0]);
             return;
         }
 
         // 複数の電話番号が設定されている場合は選択してもらう
         DialogInterface.OnClickListener pickupItem = new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
-                firstScreen.kaypadScreen.setInputNumber(telNums[item]);
+                firstScreen.keypadScreen.setInputNumber(telNums[item]);
             }
         };
         new AlertDialog.Builder(this)
@@ -298,10 +320,13 @@ public class MainActivity extends Activity {
 
 
 
+    public static void displayMessage(final String msg) {
+        displayMessage(me, msg);
+    }
+
     /**
      * メインスレッド以外からメッセージを表示させる
      *
-     * @param context コンテクスト
      * @param msg     表示させるメッセージ
      */
     public static void displayMessage(final Context context, final String msg) {

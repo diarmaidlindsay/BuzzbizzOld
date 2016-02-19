@@ -84,7 +84,7 @@ public class MyFrameLayout extends FrameLayout {
     // 各画面の制御用
 	// ------------------------------------------------------------------------------------ //
     final HoldScreen holdScreen;					// 保留画面
-    final KaypadScreen kaypadScreen;				// キーパッド画面
+    final KeypadScreen keypadScreen;				// キーパッド画面
     final InternalTableScreen internalTableScreen;	// 内線表画面
     final ExternalTableScreen externalTableScreen;	// 外線表画面
     final HistoryScreen historyScreen;				// 履歴画面
@@ -173,8 +173,8 @@ public class MyFrameLayout extends FrameLayout {
 
 
 //		 通常時は、
-//		if(MainService.curentKaypadScreen == MainService.NOMAL){
-			if(MainService.curentKaypadScreen == MainService.KeyPadStates.NOMAL){
+//		if(MainService.currentKeypadScreen == MainService.NOMAL){
+			if(MainService.currentKeypadScreen == MainService.KeyPadStates.NOMAL){
 	        // 表示画面を表紙画面に設定
 //			MainService.CurentScreenState = MainService.COVER;
 				MainService.CurentScreenState = MainService.ScreenStates.COVER;
@@ -231,7 +231,7 @@ public class MyFrameLayout extends FrameLayout {
 		// ------------------------------------------------------------------------------------ //
 		// 各画面の制御オブジェクトを生成
 		// ------------------------------------------------------------------------------------ //
-		kaypadScreen		= new KaypadScreen			(context, this);
+		keypadScreen = new KeypadScreen(context, this);
 		holdScreen			= new HoldScreen			(context, this);
 		internalTableScreen	= new InternalTableScreen	(context, this);
 		externalTableScreen	= new ExternalTableScreen	(context, this);
@@ -343,7 +343,7 @@ public class MyFrameLayout extends FrameLayout {
 				public void run() {
 					try {
 						Thread.sleep(100);
-						System.gc();
+						//System.gc();
 					} catch (Exception e) {}
 
 					// タブのロックを解除
@@ -549,7 +549,7 @@ public class MyFrameLayout extends FrameLayout {
 //		case KEYPAD :
 			case KAYPAD:
 			// ボタンUIを初期化
-			kaypadScreen.initUiMuteAndSpeakerButton();
+			keypadScreen.initUiMuteAndSpeakerButton();
 			break;
 
 
@@ -761,7 +761,7 @@ public class MyFrameLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN:
             	// タッチ場所を保存
                 lastTouchX = event.getX();
-                System.gc();
+                //System.gc();
                 break;
 
 

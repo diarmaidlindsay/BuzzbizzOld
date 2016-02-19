@@ -2,7 +2,7 @@ package jp.pulseanddecibels.buzbiz.models;
 
 import java.util.List;
 
-import jp.pulseanddecibels.buzbiz.KaypadScreen;
+import jp.pulseanddecibels.buzbiz.KeypadScreen;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -54,7 +54,6 @@ public class ProximitySensorControl {
 		for (Sensor sensor : myProximitySensors) {
 			sm.registerListener(myProximitySensorListener, sensor, SensorManager.SENSOR_DELAY_UI);
 		}
-//		sm.registerListener(myProximitySensorListener, myProximitySensors.get(0), SensorManager.SENSOR_DELAY_UI);
 	}
 
 
@@ -69,7 +68,7 @@ public class ProximitySensorControl {
 //		Log.e(Util.LOG_TAG,"  近接センサー.stop  ");
 
 
-		KaypadScreen.unlockFromProximitySensor();
+		KeypadScreen.unlockFromProximitySensor();
 		powerOffEnd();
 
 		// リスナーが存在しない場合は終了
@@ -104,12 +103,12 @@ public class ProximitySensorControl {
 			public void onSensorChanged(SensorEvent event) {
 				// 近づいたら画面OFF
 				if (event.values[0] < 5) {
-					KaypadScreen.lockFromProximitySensor();
+					KeypadScreen.lockFromProximitySensor();
 					powerOff(pm);
 
 				// 離れたら画面OFF終了
 				}else {
-					KaypadScreen.unlockFromProximitySensor();
+					KeypadScreen.unlockFromProximitySensor();
 					powerOffEnd();
 				}
 			}
@@ -129,7 +128,6 @@ public class ProximitySensorControl {
 	 */
 	private static void powerOff(PowerManager pm) {
 		powerOffEnd();
-
 		try{
 			myWakeLock = pm.newWakeLock(32, "lock");	// PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK が 32
 			myWakeLock.acquire();
