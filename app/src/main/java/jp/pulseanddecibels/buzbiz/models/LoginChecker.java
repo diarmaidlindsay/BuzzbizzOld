@@ -12,6 +12,7 @@ import jp.pulseanddecibels.buzbiz.data.LoginStatus;
 import jp.pulseanddecibels.buzbiz.R;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -77,6 +78,7 @@ public class LoginChecker {
 
                         try {
                             MainService.LIB_OP.reLogin();
+                            Log.d("LoginChecker", "reLogin");
                         } catch (Exception e) {
                             saveCheckNg(context);
                         }

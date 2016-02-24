@@ -407,9 +407,6 @@ public class LoginActivity
 
 
 
-    /*
-     * TODO test
-     */
     public void clickSSSS(View view) {
         startActivity(new Intent(this, CodecSettingActivity.class));
     }

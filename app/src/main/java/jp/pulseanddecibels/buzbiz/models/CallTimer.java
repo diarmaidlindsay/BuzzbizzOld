@@ -50,8 +50,7 @@ public class CallTimer {
 			@Override
 			public void run() {
 				if (!MainService.isCalling()) {
-					//used to cause a crash, so it was commented out. I've commented it back in, so I should check sometimes.
-					MainService.LIB_OP.endCall();
+					//MainService.LIB_OP.endCall();
 					return;
 				}
 

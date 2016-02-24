@@ -259,8 +259,6 @@ public class MainService extends Service {
 //		}
 //
 //		return false;
-		//TODO
-
 		if(currentKeypadScreen == KeyPadStates.NOMAL) return false;
 
 		return true;
@@ -297,7 +295,7 @@ public class MainService extends Service {
 
 //				if (CurentScreenState == LOGIN) {
 				if (CurentScreenState == ScreenStates.LOGIN) {
-					if (LoginActivity.me != null && LoginActivity.me.isFinishing() == false) {
+					if (LoginActivity.me != null && !LoginActivity.me.isFinishing()) {
 						LoginActivity.me.onBackPressed();
 					}
 				}

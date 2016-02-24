@@ -82,13 +82,13 @@ public class LibOperator {
 		epConfig.getLogConfig().setLevel(5);
 		epConfig.getUaConfig().setMaxCalls(4);
 		epConfig.getMedConfig().setSndClockRate(16000);
-
 		pjsEndpoint.libInit(epConfig);
 		epConfig.delete();
-		pjsEndpoint.codecSetParam("gsm/8000", null);
+		pjsEndpoint.codecSetParam("PCMU/8000", null); //ULAW Codec
+		pjsEndpoint.codecSetParam("GSM/8000", null);
 		// Create SIP transport. Error handling sample is shown
 		TransportConfig sipTpConfig = new TransportConfig();
-		sipTpConfig.setPort(56131);
+		sipTpConfig.setPort(5060);
 		pjsEndpoint.transportCreate(pjsip_transport_type_e.PJSIP_TRANSPORT_UDP, sipTpConfig);
 		sipTpConfig.delete();
 		// Start the library
@@ -98,8 +98,8 @@ public class LibOperator {
 
 	private void deinitEndPoint() throws Exception {
 		Log.e(LOG_TAG, "deInitEndPoint 1");
-		pjsEndpoint.libDestroy();
 		if(pjsEndpoint != null) {
+			pjsEndpoint.libDestroy();
 			pjsEndpoint.delete();
 		}
 		pjsEndpoint = null;
@@ -123,8 +123,8 @@ public class LibOperator {
 			initEndPoint();
 
 			AccountConfig accountConfig = new AccountConfig();
-			accountConfig.setIdUri("sip:"+userName+"@"+server);
-			accountConfig.getRegConfig().setRegistrarUri("sip:"+server);
+			accountConfig.setIdUri("sip:" + userName + "@" + server);
+			accountConfig.getRegConfig().setRegistrarUri("sip:" + server+ ":56131");
 			AuthCredInfo cred = new AuthCredInfo("digest", "*", userName, 0, userPassword);
 			accountConfig.getSipConfig().getAuthCreds().add(cred);
 			// Create the account
@@ -141,7 +141,9 @@ public class LibOperator {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			account.delete();
+			if(account != null) {
+				account.delete();
+			}
 			MainService.setEventLoginFailure();
 		}
 
@@ -158,7 +160,7 @@ public class LibOperator {
 	public boolean reLogin() {
 //		return VAX.reLogin();
 		//TODO : Re-Login
-		return false;
+		return true;
 	}
 
 
@@ -275,7 +277,7 @@ public class LibOperator {
 			} else {
 				sipServer = setting.loadRemoteServerDomain(context);
 			}
-			currentCall.makeCall("sip:" + telNum.getBaseString() + "@" + sipServer, callOpParam);
+			currentCall.makeCall("sip:" + telNum.getBaseString() + "@" + sipServer + ":56131", callOpParam);
 		} catch (Exception e) {
 			currentCall.delete();
 			e.printStackTrace();
@@ -302,6 +304,8 @@ public class LibOperator {
 				currentCall = null;
 			} catch (Exception e) {
 				e.printStackTrace();
+			} finally {
+				prm.delete();
 			}
 		}
 	}
@@ -329,8 +333,9 @@ public class LibOperator {
 			currentCall.xfer("sip:700@" + sipServer, prm);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		} finally {
 		prm.delete();
+		}
 
 }
 

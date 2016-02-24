@@ -61,8 +61,8 @@ public class BuzBizCall extends Call {
         prm.delete();
         try {
             CallInfo ci = getInfo();
-            //Log.e(LOG_TAG, "StatusCode : " + ci.getLastStatusCode());
-            //Log.e(LOG_TAG, "onCallState : "+ci.getState().toString());
+//            Log.e(LOG_TAG, "StatusCode : " + ci.getLastStatusCode());
+//            Log.e(LOG_TAG, "onCallState : "+ci.getState().toString());
             //call connected event
             if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
                 MainService.setEventStartCall();
@@ -79,7 +79,7 @@ public class BuzBizCall extends Call {
             try {
                lastStatusCode = ci.getLastStatusCode();
                 //wrong number/number not found event
-                if(lastStatusCode == pjsip_status_code.PJSIP_SC_NOT_FOUND) {
+                if(lastStatusCode == pjsip_status_code.PJSIP_SC_NOT_FOUND || lastStatusCode == pjsip_status_code.PJSIP_SC_ADDRESS_INCOMPLETE) {
                     MainActivity.displayMessage("お掛けになった電話番号は、存在しません");
                 }
                 //number busy event
@@ -170,7 +170,7 @@ public class BuzBizCall extends Call {
     public void onCallTransferStatus(OnCallTransferStatusParam prm) {
         super.onCallTransferStatus(prm);
         if(prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_OK)) {
-            //hang up when the call is put on hold (when its tranferred)
+            //hang up when the call is put on hold (when its transferred)
             MainService.LIB_OP.endCall();
         }
         Log.d(LOG_TAG, "onCallTransferStatus " + prm.getStatusCode().toString());

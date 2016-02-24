@@ -25,4 +25,21 @@ public class BuzbizAccount extends Account {
         prm.delete();
         MainService.me.onIncomingCall(call);
     }
+
+    /*
+    @Override
+    public void onRegStarted(OnRegStartedParam prm) {
+        super.onRegStarted(prm);
+        Log.d(LOG_TAG, "onRegStarted : " + prm.getRenew());
+        prm.delete();
+    }
+
+    @Override
+    public void onRegState(OnRegStateParam prm) {
+        super.onRegState(prm);
+        Log.d(LOG_TAG, "onRegState : " + prm.getCode().toString());
+        Log.d(LOG_TAG, "onRegState : " + prm.getReason());
+        prm.delete();
+    }
+    */
 }
