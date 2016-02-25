@@ -71,10 +71,13 @@ public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window window = this.getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
-        window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
-        window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        //only unlock the screen when there is an incoming call
+        if(getIntent().getBooleanExtra("incoming", false)) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
+            window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+        }
 
         Log.d(LOG_TAG, "onCreate 1");
         Fabric.with(this, new Crashlytics());

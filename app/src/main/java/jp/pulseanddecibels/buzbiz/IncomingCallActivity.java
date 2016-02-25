@@ -171,6 +171,7 @@ public class IncomingCallActivity extends Activity {
 
 		// メインに戻る
 		Intent intentGoToMain = new Intent(getApplicationContext(), MainActivity.class);
+		intentGoToMain.putExtra("incoming", true);
 		intentGoToMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intentGoToMain);
 		// 本画面を終了
