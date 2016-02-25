@@ -84,8 +84,20 @@ public class LibOperator {
 		epConfig.getMedConfig().setSndClockRate(16000);
 		pjsEndpoint.libInit(epConfig);
 		epConfig.delete();
-		pjsEndpoint.codecSetParam("PCMU/8000", null); //ULAW Codec
-		pjsEndpoint.codecSetParam("GSM/8000", null);
+
+		/*
+		Setting setting = new Setting();
+		if(setting.loadGSM(MainService.me)) {
+			Log.d(LOG_TAG, "initEndPoint : GSM Selected");
+			pjsEndpoint.codecSetPriority("GSM/8000", (short)32767);
+		}
+		if(setting.loadULAW(MainService.me)) {
+			Log.d(LOG_TAG, "initEndPoint : ULAW" +
+					" Selected");
+			pjsEndpoint.codecSetPriority("PCMU/8000", (short) 32766); //ULAW Codec
+		}
+		*/
+
 		// Create SIP transport. Error handling sample is shown
 		TransportConfig sipTpConfig = new TransportConfig();
 		sipTpConfig.setPort(5060);

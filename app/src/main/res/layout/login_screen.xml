@@ -334,15 +334,42 @@
 		            <!--android:textOn="" />-->
 		    <!--</LinearLayout>-->
 
-		    <Button
-				android:id="@+id/button_settings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="30dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:text="高度な設定"/>
+			<LinearLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_margin="10dp"
+				android:gravity="center"
+				android:visibility="gone">
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="GSM 8 kHz"
+					android:textColor="#FFFFFF"/>
+				<ToggleButton
+					android:id="@+id/tb_gsm"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+					android:layout_marginEnd="5dp"/>
+
+				<ToggleButton
+					android:id="@+id/tb_ulaw"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+					android:layout_marginEnd="5dp"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="ULAW 8 kHz"
+					android:textColor="#FFFFFF"/>
+
+			</LinearLayout>
+
 		</LinearLayout>
 	</ScrollView>
 </LinearLayout>

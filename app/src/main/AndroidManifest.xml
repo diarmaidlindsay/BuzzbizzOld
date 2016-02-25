@@ -88,12 +88,6 @@
         </receiver>
 
         <service android:name=".util.push.GcmIntentService" />
-
-        <!-- コーデック設定画面 -->
-        <activity
-            android:name=".CodecSettingActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

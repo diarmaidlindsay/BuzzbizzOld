@@ -15,8 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -72,20 +74,11 @@ public class LoginActivity
     @InjectView(jp.pulseanddecibels.buzbiz.R.id.et_remote_server)
     EditText remoteServerEditText;
 
-//    @InjectView(jp.pulseanddecibels.buzbiz.R.id.tbtn_tab_position_normal)
-//    ToggleButton tabPositionNormalToggleButton;
-//
-//    @InjectView(jp.pulseanddecibels.buzbiz.R.id.tbtn_tab_position_reversal)
-//    ToggleButton tabPositionReversalToggleButton;
+    @InjectView(R.id.tb_gsm)
+    ToggleButton codec1Button;
 
-//    @InjectView(jp.pulseanddecibels.buzbiz.R.id.tbtn_tab_operation_tap)
-//    ToggleButton tabOperationTapToggleButton;
-//
-//    @InjectView(jp.pulseanddecibels.buzbiz.R.id.tbtn_tab_operation_frick)
-//    ToggleButton tabOperationFrickToggleButton;
-
-
-
+    @InjectView(R.id.tb_ulaw)
+    ToggleButton codec2Button;
 
 
     // --------------- ライフサイクル ---------------
@@ -95,34 +88,55 @@ public class LoginActivity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        requestWindowFeature(Window.FEATURE_NO_TITLE);    // タイトルは非表示
 
+        setContentView(jp.pulseanddecibels.buzbiz.R.layout.login_screen);            // ビューを設定
+        Fabric.with(this, new Crashlytics());
+        ButterKnife.inject(this);
         me = this;
 
         // 表示画面をログイン画面に変更
 //        MainService.CurentScreenState = MainService.LOGIN;
         MainService.CurentScreenState = MainService.ScreenStates.LOGIN;
 
-        requestWindowFeature(Window.FEATURE_NO_TITLE);    // タイトルは非表示
-        setContentView(jp.pulseanddecibels.buzbiz.R.layout.login_screen);            // ビューを設定
-        Button settingsButton = (Button) findViewById(R.id.button_settings);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
+
+
+        codec1Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                clickSSSS(v);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //At least one codec should be selected
+                    if (!codec2Button.isChecked()) {
+                        codec1Button.setEnabled(false);
+                    }
+                }
+                codec2Button.setEnabled(isChecked);
             }
         });
-        ButterKnife.inject(this);
+
+        codec2Button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    //At least one codec should be selected
+                    if (!codec1Button.isChecked()) {
+                        codec2Button.setEnabled(false);
+                    }
+                } else {
+
+                }
+                codec1Button.setEnabled(isChecked);
+            }
+        });
 
         // 各UI部品を初期化
         initAllComponent();
 
         // 保存されたユーザ情報をUIに反映させる
         loadSavedData();
+
+        //loadCodecSetting();
     }
-
-
-
 
 
     /**
@@ -183,7 +197,26 @@ public class LoginActivity
     }
 
 
+    private void saveCodecSetting() {
+        Setting setting = new Setting();
+        Context context = getApplicationContext();
+        setting.saveGSM(context, codec1Button.isChecked());
+        setting.saveULAW(context, codec2Button.isChecked());
+    }
 
+    private void loadCodecSetting() {
+        Setting setting = new Setting();
+        Context context = getApplicationContext();
+        codec1Button.setChecked(setting.loadGSM(context));
+        codec2Button.setChecked(setting.loadULAW(context));
+
+        //At least one codec should be selected
+        if (codec1Button.isChecked() && !codec2Button.isChecked()) {
+            codec1Button.setEnabled(false);
+        } else if (codec2Button.isChecked() && !codec1Button.isChecked()) {
+            codec2Button.setEnabled(false);
+        }
+    }
 
 
     /**
@@ -262,6 +295,7 @@ public class LoginActivity
         Log.d("LoginActivity", "login2");
         final String remoteServer = Util.getText(remoteServerEditText);
         setting.saveRemoteServerInfo(getApplicationContext(), remoteServer);
+        //saveCodecSetting();
 
         // ログインマネージャーを生成
         LoginManager loginManager = new LoginManager();
@@ -403,13 +437,6 @@ public class LoginActivity
         }
     }
 
-
-
-
-
-    public void clickSSSS(View view) {
-        startActivity(new Intent(this, CodecSettingActivity.class));
-    }
 
 
 

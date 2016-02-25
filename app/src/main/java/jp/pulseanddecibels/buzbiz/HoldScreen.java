@@ -1,15 +1,5 @@
 package jp.pulseanddecibels.buzbiz;
 
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import jp.pulseanddecibels.buzbiz.models.JsonParser;
-import jp.pulseanddecibels.buzbiz.models.PageRenderer;
-import jp.pulseanddecibels.buzbiz.data.TelNumber;
-import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
-import jp.pulseanddecibels.buzbiz.util.Logger;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -27,15 +17,25 @@ import android.view.View.OnTouchListener;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import jp.pulseanddecibels.buzbiz.data.TelNumber;
+import jp.pulseanddecibels.buzbiz.models.JsonParser;
+import jp.pulseanddecibels.buzbiz.models.PageRenderer;
+import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
+import jp.pulseanddecibels.buzbiz.util.Logger;
 
 
 
@@ -83,8 +83,12 @@ public class HoldScreen {
 
 
     //  ----------  内部処理  ----------
-    private void showMessage(String msg) {
-        Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    private void showMessage(final String msg) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(context.getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 

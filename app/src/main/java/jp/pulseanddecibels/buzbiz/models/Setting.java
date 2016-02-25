@@ -357,20 +357,6 @@ public class Setting {
     private static final int ON  = 100;
     private static final int OFF = 200;
 
-    /**
-     * G711Uコーデック
-     */
-    private static final String TAG_G711U = "TAG_G711U";
-
-    /**
-     * Opusコーデック
-     */
-    private static final String TAG_OPUS = "TAG_OPUS";
-
-    /**
-     * iLBCコーデック
-     */
-    private static final String TAG_ILBC = "TAG_ILBC";
 
     /**
      * GSMコーデック
@@ -378,71 +364,9 @@ public class Setting {
     private static final String TAG_GSM = "TAG_GSM";
 
     /**
-     * スピーカーソフトブースト
+     * ULAWコーデック
      */
-    private static final String TAG_SSB = "TAG_SSB";
-
-    /**
-     * スピーカーAutoGain
-     */
-    private static final String TAG_SAG = "TAG_SAG";
-
-    /**
-     * マイクソフトブースト
-     */
-    private static final String TAG_MSB = "TAG_MSB";
-
-    /**
-     * マイクAutoGain
-     */
-    private static final String TAG_MAG = "TAG_MAG";
-
-
-
-
-
-    /**
-     * G711Uの設定を保存
-     *
-     * @param context コンテキスト
-     * @param isOn    使用するかどうか
-     */
-    public void saveG711U(Context context, boolean isOn) {
-        int value = getValue(isOn);
-        File.saveData(context, TAG_G711U, value);
-    }
-
-
-
-
-
-    /**
-     * Opusの設定を保存
-     *
-     * @param context コンテキスト
-     * @param isOn    使用するかどうか
-     */
-    public void saveOpus(Context context, boolean isOn) {
-        int value = getValue(isOn);
-        File.saveData(context, TAG_OPUS, value);
-    }
-
-
-
-
-
-    /**
-     * iLBCの設定を保存
-     *
-     * @param context コンテキスト
-     * @param isOn    使用するかどうか
-     */
-    public void saveIlbc(Context context, boolean isOn) {
-        int value = getValue(isOn);
-        File.saveData(context, TAG_ILBC, value);
-    }
-
-
+    private static final String TAG_ULAW = "TAG_ULAW";
 
 
 
@@ -459,106 +383,16 @@ public class Setting {
 
 
 
-
-
     /**
-     * スピーカーソフトブーストの設定を保存
+     * ULAWの設定を保存
      *
      * @param context コンテキスト
      * @param isOn    使用するかどうか
      */
-    public void saveSpkSoftBoost(Context context, boolean isOn) {
+    public void saveULAW(Context context, boolean isOn) {
         int value = getValue(isOn);
-        File.saveData(context, TAG_SSB, value);
+        File.saveData(context, TAG_ULAW, value);
     }
-
-
-
-
-
-    /**
-     * スピーカーAutoGainの設定を保存
-     *
-     * @param context コンテキスト
-     * @param value   設定する値
-     */
-    public void saveSpkAutoGain(Context context, int value) {
-        File.saveData(context, TAG_SAG, value);
-    }
-
-
-
-
-
-    /**
-     * マイクソフトブーストの設定を保存
-     *
-     * @param context コンテキスト
-     * @param isOn    使用するかどうか
-     */
-    public void saveMicSoftBoost(Context context, boolean isOn) {
-        int value = getValue(isOn);
-        File.saveData(context, TAG_MSB, value);
-    }
-
-
-
-
-
-    /**
-     * マイクAutoGainの設定を保存
-     *
-     * @param context コンテキスト
-     * @param value   設定する値
-     */
-    public void saveMicAutoGain(Context context, int value) {
-        File.saveData(context, TAG_MAG, value);
-    }
-
-
-
-
-
-    /**
-     * G711Uの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public boolean loadG711U(Context context) {
-        int value = File.getInt(context, TAG_G711U);
-        return checkOnOff_DefaultOff(value);
-    }
-
-
-
-
-
-    /**
-     * Opusの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public boolean loadOpus(Context context) {
-        int value = File.getInt(context, TAG_OPUS);
-        return checkOnOff_DefaultOff(value);
-    }
-
-
-
-
-
-    /**
-     * iLBCの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public boolean loadIlbc(Context context) {
-        int value = File.getInt(context, TAG_ILBC);
-        return checkOnOff_DefaultOff(value);
-    }
-
-
-
 
 
     /**
@@ -574,63 +408,17 @@ public class Setting {
     }
 
 
-
-
-
     /**
-     * スピーカーソフトブーストの設定をロード
+     * ULAWの設定をロード
      *
      * @param context コンテキスト
      */
-    public boolean loadSpkSoftBoost(Context context) {
-        int value = File.getInt(context, TAG_SSB);
+    public boolean loadULAW(Context context) {
+        int value = File.getInt(context, TAG_ULAW);
+
+        // GSMのみデフォルトはONとする
         return checkOnOff_DefaultOn(value);
     }
-
-
-
-
-
-    /**
-     * スピーカーAutoGainの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public int loadSpkAutoGain(Context context) {
-        int value = File.getInt(context, TAG_SAG);
-        return formatAutoGainvalue(value);
-    }
-
-
-
-
-
-    /**
-     * マイクソフトブーストの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public boolean loadMicSoftBoost(Context context) {
-        int value = File.getInt(context, TAG_MSB);
-        return checkOnOff_DefaultOff(value);
-    }
-
-
-
-
-
-    /**
-     * マイクAutoGainの設定をロード
-     *
-     * @param context コンテキスト
-     */
-    public int loadMicAutoGain(Context context) {
-        int value = File.getInt(context, TAG_MAG);
-        return formatAutoGainvalue(value);
-    }
-
-
-
 
 
     private int getValue(boolean isOn) {
