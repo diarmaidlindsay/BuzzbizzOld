@@ -30,6 +30,7 @@ import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
  *
  * PJSIP Call subclass
  * This is where we handle most of the PJSIP events
+ * PJSIPのイベントがほとんどここでハンドルされた
  */
 public class BuzBizCall extends Call {
     protected BuzBizCall(long cPtr, boolean cMemoryOwn) {
@@ -99,7 +100,12 @@ public class BuzBizCall extends Call {
     }
 
 
-
+    /**
+     * Copied from sample code :
+     * https://svn.pjsip.org/repos/pjproject/trunk/pjsip-apps/src/swig/java/android/src/org/pjsip/pjsua2/app/MyApp.java
+     *
+     * Event triggered whe n
+     */
     @Override
     public void onCallMediaState(OnCallMediaStateParam prm)
     {
@@ -117,6 +123,7 @@ public class BuzBizCall extends Call {
 
         for (int i = 0; i < cmiv.size(); i++) {
             CallMediaInfo cmi = cmiv.get(i);
+            //if audio call becomes active
             if (cmi.getType() == pjmedia_type.PJMEDIA_TYPE_AUDIO &&
                     (cmi.getStatus() ==
                             pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE ||
@@ -130,6 +137,7 @@ public class BuzBizCall extends Call {
                 m.delete();
                 // connect ports
                 try {
+                    //start audio device
                     AudDevManager audDevManager = Endpoint.instance().audDevManager();
                     audDevManager.getCaptureDevMedia().
                             startTransmit(am);

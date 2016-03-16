@@ -22,7 +22,9 @@ public class BuzbizAccount extends Account {
         super.onIncomingCall(prm);
         Log.e(LOG_TAG, "onIncomingCall");
         BuzBizCall call = new BuzBizCall(this, prm.getCallId());
+        //force delete to ensure we don't get PJSIP non-registered thread crash
         prm.delete();
+        //send Call object to MainService
         MainService.me.onIncomingCall(call);
     }
 

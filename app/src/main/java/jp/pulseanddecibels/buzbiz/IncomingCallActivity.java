@@ -35,6 +35,7 @@ public class IncomingCallActivity extends Activity {
 
 	static IncomingCallActivity me;
 	String LOG_TAG = this.getClass().getSimpleName();
+	//Turn on screen using Wakelock
 	PowerManager.WakeLock wl;
 
 
@@ -69,7 +70,7 @@ public class IncomingCallActivity extends Activity {
 		window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 		window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
-		//wake up the screen on an incoming call
+		//wake up the screen on an incoming call using a wakelock
 		PowerManager pm= (PowerManager) getSystemService(Context.POWER_SERVICE);
 		if(wl == null) {
 			wl = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "tag");

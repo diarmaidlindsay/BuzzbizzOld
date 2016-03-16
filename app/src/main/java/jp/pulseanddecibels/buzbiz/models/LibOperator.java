@@ -52,7 +52,9 @@ public class LibOperator {
 	}
 
 
-
+	/**
+	 * Load PJSIP Native Library
+	 */
 	public void init() throws Exception {
 		System.loadLibrary("pjsua2");
 	}
@@ -73,16 +75,28 @@ public class LibOperator {
     }
 
 
+	/**
+	 * http://www.pjsip.org/docs/book-latest/html/endpoint.html
+	 *
+	 * Endpoint is the Core class of PJSUA2.
+	 * Need to instantiate this class before anything else.
+	 */
 	private void initEndPoint() throws Exception {
 		Log.e(LOG_TAG, "initEndPoint 1");
 		pjsEndpoint = new Endpoint();
 		pjsEndpoint.libCreate();
 
+		//Configure Endpoint using EpConfig object
 		EpConfig epConfig = new EpConfig();
+		//log level
 		epConfig.getLogConfig().setLevel(5);
+		//maximum calls, 4 is default. Can be increased to 32.
 		epConfig.getUaConfig().setMaxCalls(4);
+		//conference bridge clockrate, default is 16KHz
 		epConfig.getMedConfig().setSndClockRate(16000);
+		//Initialise Endpoint with configuration
 		pjsEndpoint.libInit(epConfig);
+		//cleanup config object to prevent crash on Java GC
 		epConfig.delete();
 
 		/*
@@ -108,6 +122,9 @@ public class LibOperator {
 		Log.e(LOG_TAG, "initEndPoint 2");
 	}
 
+	/**
+	 * De-initialise PJSIP library when closing to prevent crash
+	 */
 	private void deinitEndPoint() throws Exception {
 		Log.e(LOG_TAG, "deInitEndPoint 1");
 		if(pjsEndpoint != null) {
@@ -289,6 +306,7 @@ public class LibOperator {
 			} else {
 				sipServer = setting.loadRemoteServerDomain(context);
 			}
+			//SIP URI is sip:<number>@<server>:<port>
 			currentCall.makeCall("sip:" + telNum.getBaseString() + "@" + sipServer + ":56131", callOpParam);
 		} catch (Exception e) {
 			currentCall.delete();
