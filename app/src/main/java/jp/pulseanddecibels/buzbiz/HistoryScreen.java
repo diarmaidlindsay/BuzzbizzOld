@@ -1,23 +1,22 @@
 package jp.pulseanddecibels.buzbiz;
 
-import java.util.ArrayList;
-
-import jp.pulseanddecibels.buzbiz.data.TelNumber;
-import jp.pulseanddecibels.buzbiz.models.JsonParser;
-import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.android.volley.Response;
+
+import java.util.ArrayList;
+
+import jp.pulseanddecibels.buzbiz.data.TelNumber;
+import jp.pulseanddecibels.buzbiz.models.JsonParser;
+import jp.pulseanddecibels.buzbiz.models.VolleyOperator;
 
 
 
@@ -55,14 +54,14 @@ public class HistoryScreen {
 	/**
 	 * 履歴リストのアイテム選択時の処理
 	 */
-	private final OnItemClickListener historyListItemClickListener = new OnItemClickListener(){
+	private final AdapterView.OnItemClickListener historyListItemClickListener = new AdapterView.OnItemClickListener(){
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 			// タブを隠す
 			MyFrameLayout.hideTabButton();
 
 			// コールできるかチェック
-			if(MainService.isEnableCall() == false){
+			if(!MainService.isEnableCall()){
 				return;
 			}
 
@@ -175,7 +174,7 @@ public class HistoryScreen {
                         @Override
                         public void run() {
                             // 本アクティビティーが生きている場合は、
-                            if (((Activity) context).isFinishing() == false) {
+                            if (!((Activity) context).isFinishing()) {
                                 // アダプターを作成し、外線帳リストにセット
                                 HistoryListAdapter baseAdapter = new HistoryListAdapter(context, parcedArray, jp.pulseanddecibels.buzbiz.R.layout.history_list_item);
                                 ListView listView = (ListView) ((Activity) context).findViewById(jp.pulseanddecibels.buzbiz.R.id.history_list);

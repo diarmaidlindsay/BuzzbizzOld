@@ -23,7 +23,7 @@ public class WifiController {
      * @return SSID
      */
     public String getConnectionSsid(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 
         // Wi-Fiが使用可能でない場合は空文字を返す
         if (!wifiManager.isWifiEnabled()) {
