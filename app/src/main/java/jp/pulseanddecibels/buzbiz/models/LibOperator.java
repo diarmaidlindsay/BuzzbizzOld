@@ -99,18 +99,22 @@ public class LibOperator {
 		//cleanup config object to prevent crash on Java GC
 		epConfig.delete();
 
-		/*
-		Setting setting = new Setting();
-		if(setting.loadGSM(MainService.me)) {
-			Log.d(LOG_TAG, "initEndPoint : GSM Selected");
-			pjsEndpoint.codecSetPriority("GSM/8000", (short)32767);
-		}
-		if(setting.loadULAW(MainService.me)) {
-			Log.d(LOG_TAG, "initEndPoint : ULAW" +
-					" Selected");
-			pjsEndpoint.codecSetPriority("PCMU/8000", (short) 32766); //ULAW Codec
-		}
-		*/
+		//enable GSM and PCMU
+		pjsEndpoint.codecSetPriority("GSM/8000", (short) 255);
+		pjsEndpoint.codecSetPriority("PCMU/8000", (short) 255);
+		//disable other codecs
+		pjsEndpoint.codecSetPriority("speex/16000", (short) 0);
+		pjsEndpoint.codecSetPriority("speex/8000", (short) 0);
+		pjsEndpoint.codecSetPriority("speex/32000", (short) 0);
+		pjsEndpoint.codecSetPriority("PCMA/8000", (short) 0);
+		pjsEndpoint.codecSetPriority("G722/16000", (short) 0);
+		pjsEndpoint.codecSetPriority("iLBC/8000", (short) 0);
+
+        /*
+		for(int i = 0; i < pjsEndpoint.codecEnum().size(); i++) {
+			System.err.println(pjsEndpoint.codecEnum().get(i).getCodecId());
+			System.err.println(pjsEndpoint.codecEnum().get(i).getPriority());
+		}*/
 
 		// Create SIP transport. Error handling sample is shown
 		TransportConfig sipTpConfig = new TransportConfig();

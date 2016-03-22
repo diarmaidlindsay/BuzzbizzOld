@@ -139,6 +139,9 @@ public class BuzBizCall extends Call {
                 try {
                     //start audio device
                     AudDevManager audDevManager = Endpoint.instance().audDevManager();
+                    //on some devices (Sony Xperia) by default the wrong microphone was selected.
+                    //"1" seems to work on all devices tested so far.
+                    audDevManager.setCaptureDev(1);
                     audDevManager.getCaptureDevMedia().
                             startTransmit(am);
                     am.startTransmit(audDevManager.
