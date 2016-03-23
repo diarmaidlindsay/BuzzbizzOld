@@ -255,7 +255,7 @@ public class LibOperator {
 	 */
 	public void answerCall(BuzBizCall call) {
 		Log.e(LOG_TAG, "answerCall 1");
-		currentCall = call;
+		setCurrentCall(call);
 		CallOpParam callOpParam = new CallOpParam();
 		callOpParam.setStatusCode(pjsip_status_code.PJSIP_SC_OK);
 		try {
@@ -299,7 +299,7 @@ public class LibOperator {
 	 */
 	public void startCall(TelNumber telNum, Context context) {
 		Log.e(LOG_TAG, "startCall 1");
-		currentCall = new BuzBizCall(account);
+		setCurrentCall(new BuzBizCall(account));
 		CallOpParam callOpParam = new CallOpParam(true);
 		try {
 			Setting setting = new Setting();
@@ -335,7 +335,6 @@ public class LibOperator {
 			prm.setStatusCode(pjsip_status_code.PJSIP_SC_DECLINE);
 			try {
 				currentCall.hangup(prm); //only need to do when the user manually hangs up
-				currentCall = null;
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -410,5 +409,14 @@ public class LibOperator {
 				m_AudioManager.setSpeakerphoneOn(speekerFlag);
 			}
 		}).start();
+	}
+
+	public void setCurrentCall(BuzBizCall currentCall) {
+		Log.e(LOG_TAG, "setCurrentCall : "+currentCall);
+		this.currentCall = currentCall;
+	}
+
+	public boolean isCurrentCall(BuzBizCall call) {
+		return currentCall == call;
 	}
 }

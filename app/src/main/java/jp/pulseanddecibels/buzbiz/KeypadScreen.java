@@ -511,19 +511,11 @@ public class KeypadScreen {
 	private final OnClickListener callingHungUpClickListener = new OnClickListener(){
 		@Override
 		public void onClick(View view) {
-			Log.d("KeypadScreen", "  キーパッド画面.callingHungUpClickListener  ");
 			view.setClickable(false);
-
-			Log.d("KeypadScreen", "1");
-
 			// 切断
 			MainService.LIB_OP.endCall();
-			Log.d("KeypadScreen", "2");
 			stopTimer();
-			Log.d("KeypadScreen", "3");
-
 			view.setClickable(true);
-			Log.d("KeypadScreen", "4");
 		}
 	};
 

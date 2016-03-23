@@ -69,7 +69,8 @@ public class BuzBizCall extends Call {
                 MainService.setEventStartCall();
             }
             //call disconnected event
-            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
+            //only disconnect if it is the current call
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED && MainService.LIB_OP.isCurrentCall(this)) {
                 MainService.setEventEndCall();
                 MainService.OnIncomingCallRingingStop();
                 this.delete();
