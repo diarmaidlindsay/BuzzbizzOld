@@ -1,7 +1,6 @@
 package jp.pulseanddecibels.buzbiz;
 
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,10 +24,10 @@ import com.crashlytics.android.Crashlytics;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import io.fabric.sdk.android.Fabric;
+import jp.pulseanddecibels.buzbiz.models.ContentProvideHelper;
 import jp.pulseanddecibels.buzbiz.models.LoginManager;
 import jp.pulseanddecibels.buzbiz.models.LoginManagerInterface;
 import jp.pulseanddecibels.buzbiz.models.Setting;
-import jp.pulseanddecibels.buzbiz.models.ContentProvideHelper;
 import jp.pulseanddecibels.buzbiz.util.Logger;
 
 
@@ -251,6 +250,7 @@ public class MainActivity extends Activity {
      */
     private void login() {
         if (MainService.LIB_OP.isLogined()) {
+            Log.d(LOG_TAG, "login() - already logged in");
             return;
         }
 

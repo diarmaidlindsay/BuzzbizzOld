@@ -17,6 +17,7 @@ import org.pjsip.pjsua2.pjsip_transport_type_e;
 import org.pjsip.pjsua2.pjsua_buddy_status;
 
 import jp.pulseanddecibels.buzbiz.MainService;
+import jp.pulseanddecibels.buzbiz.data.AsteriskAccount;
 import jp.pulseanddecibels.buzbiz.data.DtmfCode;
 import jp.pulseanddecibels.buzbiz.data.TelNumber;
 import jp.pulseanddecibels.buzbiz.pjsip.BuzBizCall;
@@ -150,7 +151,7 @@ public class LibOperator {
 						 String userPassword,
 						 String server) {
 
-		Log.e(LOG_TAG,"login 1");
+		Log.e(LOG_TAG, "login 1");
 
 		try {
 			initEndPoint();
@@ -190,10 +191,15 @@ public class LibOperator {
 	/**
 	 * 再ログインログイン
 	 */
-	public boolean reLogin() {
-//		return VAX.reLogin();
-		//TODO : Re-Login
-		return true;
+	public boolean reLogin(Context context) {
+		Setting setting = new Setting();
+		AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(context);
+		String user   = asteriskAccount.sipId;
+		String pass   = asteriskAccount.sipPass;
+		String server = setting.loadCurrentUseServerDomain(context);
+
+		logout();
+		return login(user, pass, server);
 	}
 
 

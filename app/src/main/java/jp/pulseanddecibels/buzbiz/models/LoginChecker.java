@@ -1,21 +1,18 @@
 package jp.pulseanddecibels.buzbiz.models;
 
 
-
-
-
-import java.util.Timer;
-import java.util.TimerTask;
-
-import jp.pulseanddecibels.buzbiz.MainService;
-import jp.pulseanddecibels.buzbiz.data.LoginStatus;
-import jp.pulseanddecibels.buzbiz.R;
-
 import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import jp.pulseanddecibels.buzbiz.MainService;
+import jp.pulseanddecibels.buzbiz.R;
+import jp.pulseanddecibels.buzbiz.data.LoginStatus;
 
 
 
@@ -77,8 +74,8 @@ public class LoginChecker {
                         ngCount++;
 
                         try {
-                            MainService.LIB_OP.reLogin();
-                            Log.d("LoginChecker", "reLogin");
+                            Log.d("LoginChecker", "Not logged in, re-logging in");
+                            MainService.LIB_OP.reLogin(context);
                         } catch (Exception e) {
                             saveCheckNg(context);
                         }

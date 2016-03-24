@@ -45,11 +45,7 @@ public class LoginManager {
 
         // SSIDが現在接続している無線LANのSSIDであるか確認する
         boolean ssidOk;
-        if (notEmptySsid && ssid.equals(new WifiController().getConnectionSsid(context))) {
-            ssidOk = true;
-        } else {
-            ssidOk = false;
-        }
+        ssidOk = notEmptySsid && ssid.equals(new WifiController().getConnectionSsid(context));
 
         // 各設定の入力がされているか
         boolean accountOk       = notEmptyUserName && notEmptyPassword;
@@ -293,7 +289,7 @@ public class LoginManager {
             @Override
             public void run() {
                 try {
-                    VolleyOperator.registeGcm(lmi.getContext(), ok, err);
+                    VolleyOperator.registerGcm(lmi.getContext(), ok, err);
                 } catch (Exception ex) {
                     handler.post(new Runnable() {
                         @Override
