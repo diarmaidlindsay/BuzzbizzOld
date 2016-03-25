@@ -385,6 +385,8 @@ public class MainService extends Service {
 		// 近接センサーをストップさせる
 		//sometimes causes crash because it's on a different thread to PJSIP
 		ProximitySensorControl.stop(me.getApplicationContext());
+
+		LIB_OP.setCurrentCall(null);
 	}
 
 

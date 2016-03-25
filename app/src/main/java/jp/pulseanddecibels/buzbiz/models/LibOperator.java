@@ -361,6 +361,8 @@ public class LibOperator {
 			} finally {
 				prm.delete();
 			}
+		} else {
+			Log.d(LOG_TAG, "endCall - Current call is null");
 		}
 	}
 

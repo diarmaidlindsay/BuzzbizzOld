@@ -153,7 +153,7 @@ public class HoldScreen {
 	private void setHoldListEmptyMessage(boolean isEmpty) {
 		View message = myFrameLayout.findViewById(jp.pulseanddecibels.buzbiz.R.id.hold_list_empty_message);
 		if (isEmpty) {
-			message.setVisibility(View.VISIBLE);
+            message.setVisibility(View.VISIBLE);
 		} else {
 			message.setVisibility(View.GONE);
 		}

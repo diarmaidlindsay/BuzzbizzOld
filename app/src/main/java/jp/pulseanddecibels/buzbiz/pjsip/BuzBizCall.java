@@ -68,18 +68,11 @@ public class BuzBizCall extends Call {
             if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
                 MainService.setEventStartCall();
             }
-            //call disconnected event
-            //only disconnect if it is the current call
-            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED && MainService.LIB_OP.isCurrentCall(this)) {
-                MainService.setEventEndCall();
-                MainService.OnIncomingCallRingingStop();
-                this.delete();
-            }
 
             pjsip_status_code lastStatusCode;
 
             try {
-               lastStatusCode = ci.getLastStatusCode();
+                lastStatusCode = ci.getLastStatusCode();
                 //wrong number/number not found event
                 if(lastStatusCode == pjsip_status_code.PJSIP_SC_NOT_FOUND || lastStatusCode == pjsip_status_code.PJSIP_SC_ADDRESS_INCOMPLETE) {
                     MainActivity.displayMessage("お掛けになった電話番号は、存在しません");
@@ -90,6 +83,15 @@ public class BuzBizCall extends Call {
                 }
             } catch (IllegalArgumentException e) {
                 //do nothing
+            }
+
+            //call disconnected event
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED &&
+                    //ongoing call is disconnected by either party or incoming call is disconnected by caller
+                    (MainService.LIB_OP.isCurrentCall(this) || MainService.LIB_OP.isCurrentCall(null))
+                    ) {
+                MainService.setEventEndCall();
+                MainService.OnIncomingCallRingingStop();
             }
 
             //force delete to ensure we don't get PJSIP non-registered thread crash

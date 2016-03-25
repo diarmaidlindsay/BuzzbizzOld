@@ -2,7 +2,6 @@ package jp.pulseanddecibels.buzbiz.models;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -41,7 +40,7 @@ public class VolleyOperator {
     public static synchronized void getAsteriskAccount(final Context context,
                                                        Response.Listener ok,
                                                        Response.ErrorListener err) {
-        Log.d(LOG_TAG, "getAsteriskAccount");
+        //Log.d(LOG_TAG, "getAsteriskAccount");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -84,7 +83,7 @@ public class VolleyOperator {
     public static synchronized void getLicenceKey(final Context context,
                                                   Response.Listener ok,
                                                   Response.ErrorListener err) {
-        Log.d(LOG_TAG, "getLicenceKey");
+        //Log.d(LOG_TAG, "getLicenceKey");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -127,7 +126,7 @@ public class VolleyOperator {
     public static synchronized void registerGcm(final Context context,
                                                 Response.Listener ok,
                                                 Response.ErrorListener err) throws IOException {
-        Log.d(LOG_TAG, "registerGcm");
+        //Log.d(LOG_TAG, "registerGcm");
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
 
         final String token = gcm.register("337574662965");
@@ -179,7 +178,7 @@ public class VolleyOperator {
      * @param context コンテキスト
      */
     public static synchronized void forceLogout(final Context context) {
-        Log.d(LOG_TAG, "forceLogout");
+        //Log.d(LOG_TAG, "forceLogout");
         // 成功時
         Response.Listener ok = new Response.Listener() {
             @Override
@@ -236,7 +235,7 @@ public class VolleyOperator {
     public static synchronized void downloadExternalTable(final Context context,
                                                           Response.Listener ok,
                                                           Response.ErrorListener err) {
-        Log.d(LOG_TAG, "downloadExternalTable");
+        //Log.d(LOG_TAG, "downloadExternalTable");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -279,7 +278,7 @@ public class VolleyOperator {
     public static synchronized void downloadInternalTable(final Context context,
                                                           Response.Listener ok,
                                                           Response.ErrorListener err) {
-        Log.d(LOG_TAG, "downloadInternalTable");
+        //Log.d(LOG_TAG, "downloadInternalTable");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -322,7 +321,7 @@ public class VolleyOperator {
     public static synchronized void downloadHistoryList(final Context context,
                                                         Response.Listener ok,
                                                         Response.ErrorListener err) {
-        Log.d(LOG_TAG, "downloadHistoryList");
+        //Log.d(LOG_TAG, "downloadHistoryList");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -368,7 +367,7 @@ public class VolleyOperator {
     public static synchronized void downloadHoldList(final Context context,
                                                      Response.Listener ok,
                                                      Response.ErrorListener err) {
-        Log.d(LOG_TAG, "downloadHoldList");
+        //Log.d(LOG_TAG, "downloadHoldList");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
@@ -408,7 +407,7 @@ public class VolleyOperator {
                                                  final TelNumber telNum,
                                                  Response.Listener ok,
                                                  Response.ErrorListener err) {
-        Log.d(LOG_TAG, "resolverName");
+        //Log.d(LOG_TAG, "resolverName");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
