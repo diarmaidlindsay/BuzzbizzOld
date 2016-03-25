@@ -85,13 +85,12 @@ public class BuzBizCall extends Call {
                     MainActivity.displayMessage("お掛けになった電話番号は、存在しません");
                 }
                 //number busy event
-                else if(lastStatusCode == pjsip_status_code.PJSIP_SC_BUSY_HERE) {
+                else if(lastStatusCode == pjsip_status_code.PJSIP_SC_BUSY_HERE && MainService.LIB_OP.isCurrentCall(this)) {
                     MainActivity.displayMessage("ご利用中です。お掛け直し下さい");
                 }
             } catch (IllegalArgumentException e) {
                 //do nothing
             }
-
 
             //force delete to ensure we don't get PJSIP non-registered thread crash
             ci.delete();

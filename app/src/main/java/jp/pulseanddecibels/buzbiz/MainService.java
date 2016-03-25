@@ -55,7 +55,7 @@ public class MainService extends Service {
 	public enum KeyPadStates{
 		NOMAL,
 		CALLING_NO_KAYPUD,
-		CALLING_KAYPAD;
+		CALLING_KAYPAD
 	}
 
 	public enum ScreenStates{
@@ -66,7 +66,7 @@ public class MainService extends Service {
 		KAYPAD,
 		EXTERBAN_TABLE,
 		INTERNAL_TABLE,
-		HISTORY;
+		HISTORY
 	}
 
 	static ScreenStates CurentScreenState = ScreenStates.COVER;
@@ -259,9 +259,8 @@ public class MainService extends Service {
 //		}
 //
 //		return false;
-		if(currentKeypadScreen == KeyPadStates.NOMAL) return false;
+		return currentKeypadScreen != KeyPadStates.NOMAL;
 
-		return true;
 	}
 
 
@@ -421,6 +420,8 @@ public class MainService extends Service {
 
 		// 通話中は、画面表示はしない
 		if (isCalling()) {
+			//send busy signal if we're already on a call
+			LIB_OP.busyCall(callItem.call);
 			return;
 		}
 

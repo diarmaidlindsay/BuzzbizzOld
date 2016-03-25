@@ -296,7 +296,22 @@ public class LibOperator {
 	}
 
 
-
+	/**
+	 * 着信を拒否する
+	 */
+	public void busyCall(BuzBizCall call) {
+		Log.e(LOG_TAG, "busyCall 1");
+		CallOpParam callOpParam = new CallOpParam();
+		callOpParam.setStatusCode(pjsip_status_code.PJSIP_SC_BUSY_HERE);
+		try {
+			call.hangup(callOpParam);
+		} catch (Exception e) {
+			call.delete();
+			e.printStackTrace();
+		}
+		callOpParam.delete();
+		Log.e(LOG_TAG, "busyCall 2");
+	}
 
 
 	/**

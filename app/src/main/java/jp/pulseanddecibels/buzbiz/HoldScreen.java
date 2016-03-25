@@ -236,7 +236,7 @@ public class HoldScreen {
 			}
 
             // クリックされたアイテムを取得
-			final HoldListItem item = (HoldListItem)((ListView) parent).getItemAtPosition(position);
+			final HoldListItem item = (HoldListItem) parent.getItemAtPosition(position);
 
 			// 「はい」選択時の処理
 			final OnClickListener yes = new OnClickListener() {
@@ -308,7 +308,8 @@ public class HoldScreen {
             try {
                 stopHoldScreenTimer();
                 holdListTimer = new Timer();
-                holdListTimer.schedule(new HoldScreenTimerTask(), 500, 10000);
+                final HoldScreenTimerTask task = new HoldScreenTimerTask();
+                holdListTimer.schedule(task, 500, 10000);
             } catch (Exception e) {
                 Logger.e("  保留リスト更新タイマー失敗  " + e.toString());
             }
@@ -369,7 +370,7 @@ public class HoldScreen {
             // 保留リストを取得する
             VolleyOperator.downloadHoldList(context, okDownloadHistoryList, null);
         }
-    };
+    }
 
 
 
@@ -545,5 +546,5 @@ public class HoldScreen {
 
             glCount++;
         }
-    };
+    }
 }

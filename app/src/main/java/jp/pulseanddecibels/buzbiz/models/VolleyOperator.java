@@ -57,7 +57,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 return postParams;
@@ -100,7 +100,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 return postParams;
@@ -153,7 +153,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id",   setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 postParams.put("platform", "2");
@@ -207,7 +207,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(context);
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
@@ -252,7 +252,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 return postParams;
@@ -295,7 +295,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 return postParams;
@@ -338,7 +338,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(context);
                 postParams.put("user_id",       setting.loadUserName(context));
                 postParams.put("user_pass",     setting.loadPassword(context));
@@ -384,7 +384,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 postParams.put("user_id", setting.loadUserName(context));
                 postParams.put("user_pass", setting.loadPassword(context));
                 return postParams;
@@ -424,7 +424,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(context);
                 postParams.put("user_id",       setting.loadUserName(context));
                 postParams.put("user_pass",     setting.loadPassword(context));
@@ -465,7 +465,7 @@ public class VolleyOperator {
         StringRequest sr = new StringRequest(Request.Method.POST, url, ok, err) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> postParams = new HashMap<String, String>();
+                Map<String, String> postParams = new HashMap<>();
                 AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(context);
                 postParams.put("sip_id", asteriskAccount.sipId);
                 return postParams;
@@ -510,7 +510,7 @@ public class VolleyOperator {
 //                String userpassword = user + ":" + pass;
 //                final String encodedUserpassword = new String(Base64.encode(userpassword.getBytes(), Base64.DEFAULT));
 //
-//                Map<String, String> newHeaders = new HashMap<String, String>();
+//                Map<String, String> newHeaders = new HashMap<>();
 //                newHeaders.putAll(headers);
 //                newHeaders.put("Authorization", "Basic " + encodedUserpassword);
 //                return newHeaders;
