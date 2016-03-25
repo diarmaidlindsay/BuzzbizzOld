@@ -63,6 +63,7 @@
             android:background="@drawable/setting" />
 
         <TextView
+            android:textColor="@android:color/darker_gray"
             android:id="@+id/hold_list_empty_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
