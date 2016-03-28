@@ -73,11 +73,13 @@ public class LoginChecker {
                     } else {
                         ngCount++;
 
-                        try {
-                            Log.d("LoginChecker", "Not logged in, re-logging in");
-                            MainService.LIB_OP.reLogin(context);
-                        } catch (Exception e) {
-                            saveCheckNg(context);
+                        if(!MainService.isCalling()) {
+                            try {
+                                Log.d("LoginChecker", "Not logged in, re-logging in");
+                                MainService.LIB_OP.reLogin(context);
+                            } catch (Exception e) {
+                                saveCheckNg(context);
+                            }
                         }
                     }
                 }
