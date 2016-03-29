@@ -87,10 +87,10 @@ public class MainService extends Service {
 			LoginStatus status = LoginStatus.load(getApplicationContext());
 			if (status.isOnLine()) {
 				stopStayService();
-				startStayService(jp.pulseanddecibels.buzbiz.R.drawable.login_status_icon);
+				startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logged_in_icon);
 			} else {
 				stopStayService();
-				startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logout_status_icon);
+				startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logged_out_icon);
 			}
 		}
 	};
@@ -160,7 +160,7 @@ public class MainService extends Service {
 		// メッセージに対応した処理を実行
 		if (msg.equals("resident")) {
 			// サービスを常駐化する
-			startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logout_status_icon);
+			startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logged_out_icon);
 
 		} else if (msg.equals("unresident")) {
 			// サービスを常駐化を終了
@@ -168,7 +168,7 @@ public class MainService extends Service {
 
 		} else if (msg.equals("re-resident")) {
 			stopStayService();
-			startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logout_status_icon);
+			startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logged_out_icon);
 		}
 	}
 
@@ -279,7 +279,7 @@ public class MainService extends Service {
 
 		// 変更予定
 		me.stopStayService();
-		me.startStayService(jp.pulseanddecibels.buzbiz.R.drawable.login_status_icon);
+		me.startStayService(jp.pulseanddecibels.buzbiz.R.drawable.logged_in_icon);
 
 		// サーバの死活監視スタート
 		LoginChecker.start(me.getApplicationContext());

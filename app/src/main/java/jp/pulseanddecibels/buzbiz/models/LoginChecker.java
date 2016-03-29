@@ -53,8 +53,8 @@ public class LoginChecker {
                 public void onErrorResponse(VolleyError error) {
                     ngCount++;
 
-                    // pingが2回失敗した場合は、ログインステータスをNWダウンとする
-                    if (ngCount == 2) {
+                    // pingが5回失敗した場合は、ログインステータスをNWダウンとする
+                    if (ngCount >= 5) {
                         saveCheckNg(context);
                     }
                 }
@@ -80,6 +80,8 @@ public class LoginChecker {
                             } catch (Exception e) {
                                 saveCheckNg(context);
                             }
+                        } else {
+                            ngCount = 0;
                         }
                     }
                 }
@@ -121,7 +123,7 @@ public class LoginChecker {
     private static void saveCheckOk(Context context) {
         // ステータスバーのアイコンを変更
         MainService.me.stopStayService();
-        MainService.me.startStayService(R.drawable.login_status_icon);
+        MainService.me.startStayService(R.drawable.logged_in_icon);
 
         // ログイン状態を保存
         new LoginStatus(LoginStatus.ONLINE).save(context);
@@ -141,7 +143,7 @@ public class LoginChecker {
     private static void saveCheckNg(Context context) {
         // ステータスバーのアイコンを変更
         MainService.me.stopStayService();
-        MainService.me.startStayService(R.drawable.logout_status_icon);
+        MainService.me.startStayService(R.drawable.logged_out_icon);
 
         // ログイン状態を保存
         new LoginStatus(LoginStatus.PING_NG).save(context);
