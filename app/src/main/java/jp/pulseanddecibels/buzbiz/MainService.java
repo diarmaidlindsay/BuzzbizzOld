@@ -418,7 +418,6 @@ public class MainService extends Service {
 	private void onIncomingCall(IncomingCallItem callItem){
 		Log.d("MainService", "onIncomingCall 1");
 		boolean isFirstIncomingCall = !IncomingCallControl.INSTANCE.isDuringIncomingCall();
-		IncomingCallControl.INSTANCE.addItem(callItem);
 
 		// 通話中は、画面表示はしない
 		if (isCalling()) {
@@ -426,6 +425,8 @@ public class MainService extends Service {
 			LIB_OP.busyCall(callItem.call);
 			return;
 		}
+
+		IncomingCallControl.INSTANCE.addItem(callItem);
 
 		// 初回着信時は、着信画面を表示
 		if (isFirstIncomingCall) {
