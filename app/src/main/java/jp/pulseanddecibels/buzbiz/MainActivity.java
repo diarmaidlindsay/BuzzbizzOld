@@ -213,7 +213,12 @@ public class MainActivity extends Activity {
      * 『戻る』ボタンを無効に設定
      */
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        if(MainService.currentKeypadScreen == MainService.KeyPadStates.CALLING_KAYPAD){
+            //return from keypad screen with keypad to call screen without keypad
+            firstScreen.keypadScreen.setCallScreen();
+        }
+    }
 
 
 
