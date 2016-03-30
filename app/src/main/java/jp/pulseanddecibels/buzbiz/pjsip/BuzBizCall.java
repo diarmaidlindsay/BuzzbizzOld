@@ -22,6 +22,7 @@ import org.pjsip.pjsua2.pjsua_call_media_status;
 
 import jp.pulseanddecibels.buzbiz.MainActivity;
 import jp.pulseanddecibels.buzbiz.MainService;
+import jp.pulseanddecibels.buzbiz.R;
 import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
 
 /**
@@ -185,6 +186,10 @@ public class BuzBizCall extends Call {
         if(prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_OK)) {
             //hang up when the call is put on hold (when its transferred)
             MainService.LIB_OP.endCall();
+        }
+        if(prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_SERVICE_UNAVAILABLE)) {
+            //call is already being held by other party
+            MainActivity.displayMessage(MainService.me.getString(R.string.hold_error));
         }
         Log.d(LOG_TAG, "onCallTransferStatus " + prm.getStatusCode().toString());
     }

@@ -83,4 +83,6 @@
     <string name="title_activity_codec_setting">CodecSettingActivity</string>
 
     <string name="hello_world">Hello world!</string>
+
+    <string name="hold_error">保留中ですのでそのままお待ち下さい</string>
 </resources>
