@@ -34,7 +34,7 @@ import jp.pulseanddecibels.buzbiz.models.VibratorControl;
 public class IncomingCallActivity extends Activity {
 
 	static IncomingCallActivity me;
-	String LOG_TAG = this.getClass().getSimpleName();
+	static String LOG_TAG = IncomingCallActivity.class.getSimpleName();
 	//Turn on screen using Wakelock
 	PowerManager.WakeLock wl;
 
@@ -132,6 +132,7 @@ public class IncomingCallActivity extends Activity {
 	 * 着信リストを設定する
 	 */
 	public void setIncomingCallList() {
+		//Log.d(LOG_TAG, "setIncomingCallList");
 		ArrayList<IncomingCallItem> arr = IncomingCallControl.INSTANCE.getIncomingCallList();
 		IncomingCallAdapter adapter = new IncomingCallAdapter(this, arr, jp.pulseanddecibels.buzbiz.R.layout.incoming_call_list_item);
 		((ListView) findViewById(jp.pulseanddecibels.buzbiz.R.id.incoming_call_list)).setAdapter(adapter);
@@ -145,6 +146,7 @@ public class IncomingCallActivity extends Activity {
 	 * 着信リストを再設定する
 	 */
 	public static void resetIncomingCallList() {
+		//Log.d(LOG_TAG, "resetIncomingCallList");
 		// 着信画面が閉じられていれば再表示
 //		if (me == null && me.isFinishing()) {
 //			MainService.me.showIncomingCallActivity();
@@ -167,6 +169,7 @@ public class IncomingCallActivity extends Activity {
 	 * メイン画面に戻る
 	 */
 	public void returnMainActivity() {
+		//Log.d(LOG_TAG, "returnMainActivity");
 		// 以前のメイン画面が残っている場合は削除
 		MainActivity.end();
 
@@ -180,13 +183,22 @@ public class IncomingCallActivity extends Activity {
 	}
 
 
-
-
+	@Override
+	public void finish() {
+		//don't finish if there is still calls
+		if(!IncomingCallControl.INSTANCE.isDuringIncomingCall()) {
+			//Log.d(LOG_TAG, "No incoming calls, finishing IncomingCallActivity");
+			super.finish();
+		} else {
+			//Log.d(LOG_TAG, "Still incoming calls, not finishing IncomingCallActivity");
+		}
+	}
 
 	/**
 	 * 本画面を終了させる
 	 */
 	public static void end() {
+		//Log.d(LOG_TAG, "end");
 		if(me != null && !me.isFinishing()){
 			me.finish();
 		}

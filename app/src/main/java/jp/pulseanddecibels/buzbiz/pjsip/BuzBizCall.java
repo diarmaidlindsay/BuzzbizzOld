@@ -28,7 +28,7 @@ import jp.pulseanddecibels.buzbiz.models.SoundPlayer;
 /**
  * Created by Diarmaid Lindsay on 2016/01/25.
  * Copyright Pulse and Decibels 2016
- *
+ * <p/>
  * PJSIP Call subclass
  * This is where we handle most of the PJSIP events
  * PJSIPのイベントがほとんどここでハンドルされた
@@ -66,7 +66,7 @@ public class BuzBizCall extends Call {
 //            Log.e(LOG_TAG, "StatusCode : " + ci.getLastStatusCode());
 //            Log.e(LOG_TAG, "onCallState : "+ci.getState().toString());
             //call connected event
-            if(ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED) {
                 MainService.setEventStartCall();
             }
 
@@ -75,11 +75,11 @@ public class BuzBizCall extends Call {
             try {
                 lastStatusCode = ci.getLastStatusCode();
                 //wrong number/number not found event
-                if(lastStatusCode == pjsip_status_code.PJSIP_SC_NOT_FOUND || lastStatusCode == pjsip_status_code.PJSIP_SC_ADDRESS_INCOMPLETE) {
+                if (lastStatusCode == pjsip_status_code.PJSIP_SC_NOT_FOUND || lastStatusCode == pjsip_status_code.PJSIP_SC_ADDRESS_INCOMPLETE) {
                     MainActivity.displayMessage("お掛けになった電話番号は、存在しません");
                 }
                 //number busy event
-                else if(lastStatusCode == pjsip_status_code.PJSIP_SC_BUSY_HERE && MainService.LIB_OP.isCurrentCall(this)) {
+                else if (lastStatusCode == pjsip_status_code.PJSIP_SC_BUSY_HERE && MainService.LIB_OP.isCurrentCall(this)) {
                     MainActivity.displayMessage("ご利用中です。お掛け直し下さい");
                 }
             } catch (IllegalArgumentException e) {
@@ -92,7 +92,11 @@ public class BuzBizCall extends Call {
                     (MainService.LIB_OP.isCurrentCall(this) || MainService.LIB_OP.isCurrentCall(null))
                     ) {
                 MainService.setEventEndCall();
-                MainService.OnIncomingCallRingingStop();
+            }
+
+            if (ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_CONFIRMED || ci.getState() == pjsip_inv_state.PJSIP_INV_STATE_DISCONNECTED) {
+                //stop ringing and vibration when disconnected or connected
+                MainService.OnIncomingCallRingingStop(getId());
             }
 
             //force delete to ensure we don't get PJSIP non-registered thread crash
@@ -106,12 +110,9 @@ public class BuzBizCall extends Call {
     /**
      * Copied from sample code :
      * https://svn.pjsip.org/repos/pjproject/trunk/pjsip-apps/src/swig/java/android/src/org/pjsip/pjsua2/app/MyApp.java
-     *
-     * Event triggered whe n
      */
     @Override
-    public void onCallMediaState(OnCallMediaStateParam prm)
-    {
+    public void onCallMediaState(OnCallMediaStateParam prm) {
         //force delete to ensure we don't get PJSIP non-registered thread crash
         prm.delete();
         Log.e(LOG_TAG, "onCallMediaState");
@@ -131,8 +132,7 @@ public class BuzBizCall extends Call {
                     (cmi.getStatus() ==
                             pjsua_call_media_status.PJSUA_CALL_MEDIA_ACTIVE ||
                             cmi.getStatus() ==
-                                    pjsua_call_media_status.PJSUA_CALL_MEDIA_REMOTE_HOLD))
-            {
+                                    pjsua_call_media_status.PJSUA_CALL_MEDIA_REMOTE_HOLD)) {
                 // unfortunately, on Java too, the returned Media cannot be
                 // downcasted to AudioMedia
                 Media m = getMedia(i);
@@ -172,7 +172,7 @@ public class BuzBizCall extends Call {
 
     public void muteAudio(boolean flag) {
         try {
-            Log.e(LOG_TAG, "muteAudio "+flag);
+            Log.e(LOG_TAG, "muteAudio " + flag);
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
             audDevManager.setOutputVolume(flag ? 0 : 1);
         } catch (Exception e) {
@@ -183,11 +183,11 @@ public class BuzBizCall extends Call {
     @Override
     public void onCallTransferStatus(OnCallTransferStatusParam prm) {
         super.onCallTransferStatus(prm);
-        if(prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_OK)) {
+        if (prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_OK)) {
             //hang up when the call is put on hold (when its transferred)
             MainService.LIB_OP.endCall();
         }
-        if(prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_SERVICE_UNAVAILABLE)) {
+        if (prm.getStatusCode().equals(pjsip_status_code.PJSIP_SC_SERVICE_UNAVAILABLE)) {
             //call is already being held by other party
             MainActivity.displayMessage(MainService.me.getString(R.string.hold_error));
         }

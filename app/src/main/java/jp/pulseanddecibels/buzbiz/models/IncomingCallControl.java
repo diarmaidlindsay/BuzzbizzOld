@@ -19,7 +19,7 @@ public enum IncomingCallControl {
 	INSTANCE;
 
 
-
+	public final String LOG_TAG = getClass().getSimpleName();
 
 
 	/** 着信情報一覧 */
@@ -36,11 +36,7 @@ public enum IncomingCallControl {
 	 */
 	public boolean isDuringIncomingCall() {
 		synchronized (items) {
-			if (items.size() == 0) {
-				return false;
-			} else {
-				return true;
-			}
+			return items.size() != 0;
 		}
 	}
 
@@ -54,6 +50,7 @@ public enum IncomingCallControl {
 	 */
 	public void addItem(IncomingCallItem item) {
 		synchronized (items) {
+			//Log.d(LOG_TAG, "addItem : "+item.callId);
 			items.put(item.callId, item);
 		}
 	}
@@ -68,6 +65,7 @@ public enum IncomingCallControl {
 	 */
 	public void removeItem(String callId) {
 		synchronized (items) {
+			//Log.d(LOG_TAG, "removeItem : "+callId);
 			items.remove(callId);
 		}
 	}
@@ -80,7 +78,7 @@ public enum IncomingCallControl {
 	 * 着信一覧を取得
 	 */
 	public ArrayList<IncomingCallItem> getIncomingCallList() {
-		ArrayList<IncomingCallItem> result = new ArrayList<IncomingCallItem>();
+		ArrayList<IncomingCallItem> result = new ArrayList<>();
 		synchronized (items) {
 			for (IncomingCallItem item : items.values()) {
 				result.add(item.getNewCopy());
@@ -98,6 +96,7 @@ public enum IncomingCallControl {
 	 * @param callId	応答する着信ID
 	 */
 	public void answerTo(String callId, BuzBizCall call) {
+		//Log.d(LOG_TAG, "answerTo : "+callId);
 		synchronized (items) {
 			// 応答した着信アイテムを削除
 			items.remove(callId);
@@ -127,6 +126,7 @@ public enum IncomingCallControl {
 
 
 	public void clearCallList() {
+		//Log.d(LOG_TAG, "clearCallList");
 		items.clear();
 	}
 

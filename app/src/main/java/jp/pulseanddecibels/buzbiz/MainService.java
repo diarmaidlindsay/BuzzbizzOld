@@ -487,8 +487,6 @@ public class MainService extends Service {
 
 			Log.d(LOG_TAG, "onIncomingCall 3");
 			VolleyOperator.resolverName(me.getApplicationContext(), telNum, ok, err);
-//			//crashes if we don't add this Thread.sleep()
-//			Thread.sleep(1000);
 			Log.d(LOG_TAG, "onIncomingCall 4");
 			//if we don't gc before answering the call, and gc happens when call is answered, the app will crash!
 			System.gc();
@@ -497,14 +495,14 @@ public class MainService extends Service {
 		}
 	}
 
-	public static void OnIncomingCallRingingStop() {
+	public static void OnIncomingCallRingingStop(int callId) {
 //			android.util.Log.e(Util.LOG_TAG, "--OnIncomingCallRingingStop--");
 
 		// 切れた着信を削除
-		IncomingCallControl.INSTANCE.clearCallList();
+		IncomingCallControl.INSTANCE.removeItem(Integer.toString(callId));
 
 		// 着信が無くなっていれば、
-		if (!IncomingCallControl.INSTANCE.isDuringIncomingCall()) {
+//		if (!IncomingCallControl.INSTANCE.isDuringIncomingCall()) {
 			// 呼び出し用バイブレーター終了
 			VibratorControl.stop(me.getApplicationContext());
 
@@ -515,9 +513,10 @@ public class MainService extends Service {
 			IncomingCallActivity.end();
 
 			// 他の着信が残っていれば、着信リストを更新
-		} else {
-			IncomingCallActivity.resetIncomingCallList();
-		}
+//		}
+//		else {
+//			IncomingCallActivity.resetIncomingCallList();
+//		}
 	}
 
 
