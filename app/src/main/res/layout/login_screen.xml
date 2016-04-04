@@ -185,30 +185,6 @@
 		    </EditText>
 
             <TextView
-                android:id="@+id/tv_ssid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:text="@string/SSID"
-                android:textColor="#FFFFFF" />
-            <EditText
-                android:id="@+id/et_ssid"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:layout_marginLeft="45dp"
-                android:layout_marginRight="45dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:focusable="false"
-                android:inputType="text"
-                android:background="@drawable/setting_edittext" >
-                <requestFocus />
-            </EditText>
-
-            <TextView
                 android:id="@+id/tv_remote_server"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
