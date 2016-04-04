@@ -1,21 +1,20 @@
 package jp.pulseanddecibels.buzbiz.models;
 
 
-
 import android.content.Context;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import jp.pulseanddecibels.buzbiz.LoginActivity;
+import jp.pulseanddecibels.buzbiz.MainActivity;
 import jp.pulseanddecibels.buzbiz.MainService;
 import jp.pulseanddecibels.buzbiz.data.AsteriskAccount;
 import jp.pulseanddecibels.buzbiz.util.Logger;
 import jp.pulseanddecibels.buzbiz.util.Util;
-
-
-
 
 
 /**
@@ -23,8 +22,10 @@ import jp.pulseanddecibels.buzbiz.util.Util;
 public class LoginManager {
 
 
-
     // ----------- API -----------
+
+    public final String LOG_TAG = LoginManager.class.getSimpleName();
+
     /**
      * 入力不足項目に関するメッセージを取得する
      *
@@ -34,26 +35,20 @@ public class LoginManager {
                                     String userName,
                                     String password,
                                     String localServer,
-                                    String ssid,
                                     String remoteServer) {
         // 各入力が空であるか確認
-        boolean notEmptyUserName     = !isEmpty(userName);
-        boolean notEmptyPassword     = !isEmpty(password);
-        boolean notEmptyLocalServer  = !isEmpty(localServer);
-        boolean notEmptySsid         = !isEmpty(ssid);
+        boolean notEmptyUserName = !isEmpty(userName);
+        boolean notEmptyPassword = !isEmpty(password);
+        boolean notEmptyLocalServer = !isEmpty(localServer);
         boolean notEmptyRemoteServer = !isEmpty(remoteServer);
 
-        // SSIDが現在接続している無線LANのSSIDであるか確認する
-        boolean ssidOk;
-        ssidOk = notEmptySsid && ssid.equals(new WifiController().getConnectionSsid(context));
-
         // 各設定の入力がされているか
-        boolean accountOk       = notEmptyUserName && notEmptyPassword;
-        boolean localSettingOk  = notEmptyLocalServer && notEmptySsid;
+        boolean accountOk = notEmptyUserName && notEmptyPassword;
+        boolean localSettingOk = notEmptyLocalServer;
         boolean remoteSettingOk = notEmptyRemoteServer;
 
-        // ローカル or リモートのどちらかの設定があるか (ローカルはSSIDが正しいかも確認)
-        boolean serverOk = (localSettingOk && ssidOk) || remoteSettingOk;
+        // ローカル or リモートのどちらかの設定があるか
+        boolean serverOk = localSettingOk || remoteSettingOk;
 
 
         String message = Util.STRING_EMPTY;
@@ -70,16 +65,13 @@ public class LoginManager {
             message += "は必ず入力してください\n";
         }
         if (!serverOk) {
-            if (localSettingOk && !ssidOk && !remoteSettingOk) {
-                message += "『無線LAN SSID』が現在の情報と一致しません";
+            if (localSettingOk && !remoteSettingOk) {
+                message += "が現在の情報と一致しません";
                 return message;
             }
             if (!localSettingOk && !remoteSettingOk) {
                 if (!notEmptyLocalServer) {
                     message += "『ローカルサーバ』";
-                }
-                if (!notEmptySsid) {
-                    message += "『無線LAN SSID』";
                 }
                 message += "か『リモートサーバ』のどちらかは入力してください";
                 return message;
@@ -88,9 +80,6 @@ public class LoginManager {
 
         return message;
     }
-
-
-
 
 
     /**
@@ -105,9 +94,6 @@ public class LoginManager {
     }
 
 
-
-
-
     /**
      * ログアウト
      *
@@ -118,17 +104,24 @@ public class LoginManager {
     }
 
 
-
-
-
     // ----------- 内部処理 -----------
     private boolean isEmpty(String str) {
         return TextUtils.isEmpty(str);
     }
 
+    private Context getContext() {
+        Context mainActivity = MainActivity.me;
+        Context mainService = MainService.me;
+        Context loginActivity = LoginActivity.me;
 
-
-
+        if (mainService != null) {
+            return mainService;
+        } else if (mainActivity != null) {
+            return mainActivity;
+        } else {
+            return loginActivity;
+        }
+    }
 
     /**
      * サーバよりAsteriskのアカウントを取得する
@@ -139,6 +132,7 @@ public class LoginManager {
         Response.Listener ok = new Response.Listener() {
             @Override
             public void onResponse(Object response) {
+                //Log.e(LOG_TAG, "onResponse 1");
                 // 取得情報より、Asteriskアカウントを解析する
                 AsteriskAccount asteriskAccount;
                 try {
@@ -161,16 +155,74 @@ public class LoginManager {
         Response.ErrorListener err = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                lmi.showMessage("サーバからアカウントを取得できませんでした\n" + error.getMessage());
+                //Log.e(LOG_TAG, "onErrorResponse 1");
+
+                Setting setting = new Setting();
+                if (setting.getLastConnection(getContext()) == ConnectionType.LOCAL) {
+                    Log.e(LOG_TAG, "no Local");
+                    setting.setLastConnection(getContext(), ConnectionType.REMOTE);
+                } else {
+                    Log.e(LOG_TAG, "no Remote");
+                    setting.setLastConnection(getContext(), ConnectionType.LOCAL);
+                }
+
+
+                // 成功時
+                Response.Listener ok = new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        //Log.e(LOG_TAG, "onResponse 2");
+                        // 取得情報より、Asteriskアカウントを解析する
+                        AsteriskAccount asteriskAccount;
+                        try {
+                            String json = response.toString();
+                            asteriskAccount = new JsonParser().parseAsteriskAccount(json);
+                        } catch (Exception ex) {
+                            lmi.showMessage("ログインに失敗しました\n" + ex.getMessage());
+                            return;
+                        }
+
+                        // 取得に成功した場合は、保存
+                        asteriskAccount.save(lmi.getContext());
+
+                        // ライセンスキーを取得
+                        getLicenseKey(lmi, handler);
+                    }
+                };
+
+                // 失敗時
+                Response.ErrorListener err = new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Setting setting = new Setting();
+
+                        if (setting.getLastConnection(getContext()) == ConnectionType.LOCAL) {
+                            Log.e(LOG_TAG, "no Local");
+
+                            setting.setLastConnection(getContext(), ConnectionType.REMOTE);
+                        } else {
+                            Log.e(LOG_TAG, "no Remote");
+                            setting.setLastConnection(getContext(), ConnectionType.LOCAL);
+                        }
+
+                        //Log.e(LOG_TAG, "onErrorResponse 2");
+                        lmi.showMessage("リモートサーバ、ローカルサーバ共に接続できませんでした");
+                    }
+                };
+
+                // 通信開始
+                //Log.e(LOG_TAG, "getAsteriskAccount 2");
+                VolleyOperator.getAsteriskAccount(lmi.getContext(), ok, err);
+
+
+//                lmi.showMessage("サーバからアカウントを取得できませんでした\n" + error.getMessage());
             }
         };
 
         // 通信開始
+        //Log.e(LOG_TAG, "getAsteriskAccount 1");
         VolleyOperator.getAsteriskAccount(lmi.getContext(), ok, err);
     }
-
-
-
 
 
     /**
@@ -217,9 +269,6 @@ public class LoginManager {
     }
 
 
-
-
-
     /**
      * Asteriskへログインする
      */
@@ -227,8 +276,8 @@ public class LoginManager {
                                final Handler handler) {
         Setting setting = new Setting();
         AsteriskAccount asteriskAccount = setting.loadAsteriskAccount(lmi.getContext());
-        String user   = asteriskAccount.sipId;
-        String pass   = asteriskAccount.sipPass;
+        String user = asteriskAccount.sipId;
+        String pass = asteriskAccount.sipPass;
         String server = setting.loadCurrentUseServerDomain(lmi.getContext());
 
         // ログイン
@@ -240,9 +289,6 @@ public class LoginManager {
 
         registerGcm(lmi, handler);
     }
-
-
-
 
 
     /**

@@ -20,6 +20,7 @@ import jp.pulseanddecibels.buzbiz.BuzbizApplication;
 import jp.pulseanddecibels.buzbiz.data.AsteriskAccount;
 import jp.pulseanddecibels.buzbiz.data.TelNumber;
 import jp.pulseanddecibels.buzbiz.util.Logger;
+import jp.pulseanddecibels.buzbiz.util.Util;
 
 
 /**
@@ -40,16 +41,30 @@ public class VolleyOperator {
     public static synchronized void getAsteriskAccount(final Context context,
                                                        Response.Listener ok,
                                                        Response.ErrorListener err) {
-        //Log.d(LOG_TAG, "getAsteriskAccount");
+
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         // 設定により接続先URLを設定する
         String url;
+        String sipServer;
+
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
-            String sipServer = setting.loadLocalServerDomain(context);
+        if (lastConnection == ConnectionType.LOCAL) {
+            //Log.e(LOG_TAG, "getAsteriskAccount LOCAL");
+            sipServer = setting.loadLocalServerDomain(context);
+            if(sipServer.equals(Util.STRING_EMPTY)) {
+                sipServer = "127.0.0.1";
+            }
             url = String.format("http://%s:50080/v1_0/address/login.php", sipServer);
+            //Log.e(LOG_TAG, url);
         } else {
-            String sipServer = setting.loadRemoteServerDomain(context);
+            //Log.e(LOG_TAG, "getAsteriskAccount REMOTE");
+            sipServer = setting.loadRemoteServerDomain(context);
+            if(sipServer.equals(Util.STRING_EMPTY)) {
+                sipServer = "127.0.0.1";
+            }
             url = String.format("https://%s:50443/v1_0/address/login.php", sipServer);
+            //Log.e(LOG_TAG, url);
         }
 
         // リクエストを作成
@@ -83,11 +98,13 @@ public class VolleyOperator {
     public static synchronized void getLicenceKey(final Context context,
                                                   Response.Listener ok,
                                                   Response.ErrorListener err) {
+
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
         //Log.d(LOG_TAG, "getLicenceKey");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/get_android_license.php", sipServer);
         } else {
@@ -126,6 +143,8 @@ public class VolleyOperator {
     public static synchronized void registerGcm(final Context context,
                                                 Response.Listener ok,
                                                 Response.ErrorListener err) throws IOException {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+        
         //Log.d(LOG_TAG, "registerGcm");
         final GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
 
@@ -134,7 +153,7 @@ public class VolleyOperator {
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/add_endpoint.php", sipServer);
         } else {
@@ -178,6 +197,8 @@ public class VolleyOperator {
      * @param context コンテキスト
      */
     public static synchronized void forceLogout(final Context context) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+        
         //Log.d(LOG_TAG, "forceLogout");
         // 成功時
         Response.Listener ok = new Response.Listener() {
@@ -194,7 +215,7 @@ public class VolleyOperator {
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/logout.php", sipServer);
         } else {
@@ -235,11 +256,13 @@ public class VolleyOperator {
     public static synchronized void downloadExternalTable(final Context context,
                                                           Response.Listener ok,
                                                           Response.ErrorListener err) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         //Log.d(LOG_TAG, "downloadExternalTable");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/outline.php", sipServer);
         } else {
@@ -278,11 +301,13 @@ public class VolleyOperator {
     public static synchronized void downloadInternalTable(final Context context,
                                                           Response.Listener ok,
                                                           Response.ErrorListener err) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         //Log.d(LOG_TAG, "downloadInternalTable");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/inline.php", sipServer);
         } else {
@@ -321,11 +346,13 @@ public class VolleyOperator {
     public static synchronized void downloadHistoryList(final Context context,
                                                         Response.Listener ok,
                                                         Response.ErrorListener err) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         //Log.d(LOG_TAG, "downloadHistoryList");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/history.php", sipServer);
         } else {
@@ -367,11 +394,13 @@ public class VolleyOperator {
     public static synchronized void downloadHoldList(final Context context,
                                                      Response.Listener ok,
                                                      Response.ErrorListener err) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         //Log.d(LOG_TAG, "downloadHoldList");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/hold.php", sipServer);
         } else {
@@ -407,11 +436,13 @@ public class VolleyOperator {
                                                  final TelNumber telNum,
                                                  Response.Listener ok,
                                                  Response.ErrorListener err) {
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
+
         //Log.d(LOG_TAG, "resolverName");
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/get_incoming_info.php", sipServer);
         } else {
@@ -449,10 +480,12 @@ public class VolleyOperator {
     public static synchronized void checkLoginStatus(final Context context,
                                                      Response.Listener ok,
                                                      Response.ErrorListener err) {
+
+        ConnectionType lastConnection = new Setting().getLastConnection(context);
         // 設定により接続先URLを設定する
         String url;
         final Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (lastConnection == ConnectionType.LOCAL) {
             String sipServer = setting.loadLocalServerDomain(context);
             url = String.format("http://%s:50080/v1_0/address/check_status.php", sipServer);
         } else {

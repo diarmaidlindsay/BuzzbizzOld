@@ -20,7 +20,6 @@
 
     <string name="username">ユーザ名</string>
     <string name="password">パスワード</string>
-    <string name="SSID">無線LAN SSID</string>
     <string name="LocalServer">ローカルサーバ</string>
     <string name="RemoteServer">リモートサーバ</string>
     <string name="register">ログイン</string>

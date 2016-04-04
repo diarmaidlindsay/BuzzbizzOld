@@ -159,12 +159,11 @@ public class BuzBizCall extends Call {
         ci.delete();
     }
 
-    public void muteMic(boolean flag) {
+    public void muteMic(boolean mute) {
         try {
-            Log.e(LOG_TAG, "muteMic " + flag);
+            //Log.e(LOG_TAG, "muteMic " + mute);
             AudDevManager audDevManager = Endpoint.instance().audDevManager();
-            audDevManager.getCaptureDevMedia().adjustTxLevel(flag ? 0f : 1.0f);
-            //audDevManager.setInputVolume(flag ? 0 : 1);
+            audDevManager.getCaptureDevMedia().adjustTxLevel(mute ? 0.0001f : 1.0f);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -155,7 +155,10 @@ public class LibOperator {
 
 		try {
 			initEndPoint();
-
+			if(server == null || server.equals("")) {
+				//want to avoid Invalid URL message
+				server = "127.0.0.1";
+			}
 			AccountConfig accountConfig = new AccountConfig();
 			accountConfig.setIdUri("sip:" + userName + "@" + server);
 			accountConfig.getRegConfig().setRegistrarUri("sip:" + server+ ":56131");
@@ -326,7 +329,7 @@ public class LibOperator {
 			Setting setting = new Setting();
 			String sipServer;
 
-			if (setting.isExistSavedLocalServerInfo(context)) {
+			if (setting.getLastConnection(context) == ConnectionType.LOCAL) {
 				sipServer = setting.loadLocalServerDomain(context);
 			} else {
 				sipServer = setting.loadRemoteServerDomain(context);
@@ -380,7 +383,7 @@ public class LibOperator {
 			Setting setting = new Setting();
 			String sipServer;
 
-			if (setting.isExistSavedLocalServerInfo(context)) {
+			if (setting.getLastConnection(context) == ConnectionType.LOCAL) {
 				sipServer = setting.loadLocalServerDomain(context);
 			} else {
 				sipServer = setting.loadRemoteServerDomain(context);

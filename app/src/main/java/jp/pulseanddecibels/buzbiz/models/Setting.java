@@ -34,11 +34,6 @@ public class Setting {
     private static final String TAG_LOCAL_SERVER_DOMAIN = "TAG_LOCAL_SERVER_DOMAIN";
 
     /**
-     * 無線LANのSSID
-     */
-    private static final String TAG_SSID = "TAG_SSID";
-
-    /**
      * リモートでのサーバのドメイン
      */
     private static final String TAG_REMOTE_SERVER_DOMAIN = "TAG_REMOTE_SERVER_DOMAIN";
@@ -64,7 +59,7 @@ public class Setting {
     private static final String TAG_ASTERISK_GROUP_ID = "TAG_ASTERISK_GROUP_ID";
 
 
-
+    private static final String TAG_ASTERISK_CONNECTION_TYPE = "TAG_ASTERISK_CONNECTION_TYPE";
 
 
     /**
@@ -88,11 +83,9 @@ public class Setting {
      *
      * @param context コンテキスト
      * @param lDomain ローカルでのサーバのドメイン
-     * @param ssid　無線LANのSSID
      */
-    public void saveLocalServerInfo(Context context, String lDomain, String ssid) {
+    public void saveLocalServerInfo(Context context, String lDomain) {
         File.saveData(context, TAG_LOCAL_SERVER_DOMAIN, lDomain);
-        File.saveData(context, TAG_SSID,                ssid);
     }
 
 
@@ -108,7 +101,6 @@ public class Setting {
     public void saveRemoteServerInfo(Context context, String rDomain) {
         File.saveData(context, TAG_REMOTE_SERVER_DOMAIN, rDomain);
     }
-
 
 
 
@@ -140,6 +132,15 @@ public class Setting {
     }
 
 
+    public ConnectionType getLastConnection(Context context) {
+        String name = File.getValue(context, TAG_ASTERISK_CONNECTION_TYPE);
+        return ConnectionType.getConnectionTypeMatching(name);
+    }
+
+
+    public void setLastConnection(Context context, ConnectionType type) {
+        File.saveData(context, TAG_ASTERISK_CONNECTION_TYPE, type.toString());
+    }
 
 
 
@@ -161,11 +162,7 @@ public class Setting {
         boolean isRemoteInfoOk = isExistSavedRemoteServerInfo(context);
 
         // ローカル,リモートのどちらかの設定があれば成功
-        if (isLocalInfoOk || isRemoteInfoOk) {
-            return true;
-        } else {
-            return false;
-        }
+        return isLocalInfoOk || isRemoteInfoOk;
     }
 
 
@@ -196,19 +193,7 @@ public class Setting {
      */
     public boolean isExistSavedLocalServerInfo(Context context) {
         String lDomain = File.getValue(context, TAG_LOCAL_SERVER_DOMAIN);
-        String ssid    = File.getValue(context, TAG_SSID);
-        // 保存されていなければ失敗
-        if (TextUtils.isEmpty(lDomain) || TextUtils.isEmpty(ssid)) {
-            return false;
-        }
-
-        // 保存されたSSIDと現在のSSIDが違う場合も、失敗とする
-        boolean ssidOk = ssid.equals(new WifiController().getConnectionSsid(context));
-        if (ssidOk) {
-            return true;
-        } else {
-            return false;
-        }
+        return !TextUtils.isEmpty(lDomain);
     }
 
 
@@ -237,10 +222,9 @@ public class Setting {
      * @return サーバのドメイン
      */
     public String loadCurrentUseServerDomain(Context context) {
-        Setting setting = new Setting();
-        if (setting.isExistSavedLocalServerInfo(context)) {
+        if (getLastConnection(context) == ConnectionType.LOCAL) {
             return File.getValue(context, TAG_LOCAL_SERVER_DOMAIN);
-        } else if (setting.isExistSavedRemoteServerInfo(context)) {
+        } else if (getLastConnection(context) == ConnectionType.REMOTE) {
             return File.getValue(context, TAG_REMOTE_SERVER_DOMAIN);
         } else {
             return Util.STRING_EMPTY;
@@ -287,20 +271,6 @@ public class Setting {
      */
     public String loadLocalServerDomain(Context context){
         return File.getValue(context, TAG_LOCAL_SERVER_DOMAIN);
-    }
-
-
-
-
-
-    /**
-     * 保存ファイルより無線LANのSSIDをロードする
-     *
-     * @param context コンテキスト
-     * @return 無線LANのSSID
-     */
-    public String loadSsid(Context context){
-        return File.getValue(context, TAG_SSID);
     }
 
 
@@ -434,11 +404,7 @@ public class Setting {
 
 
     private boolean checkOnOff_DefaultOff(int value) {
-        if (value == ON) {
-            return true;
-        } else {
-            return false;
-        }
+        return value == ON;
     }
 
 
@@ -448,11 +414,7 @@ public class Setting {
     private boolean checkOnOff_DefaultOn(int value) {
         if (value == ON) {
             return true;
-        } else if (value <= 0) {
-            return true;
-        } else {
-            return false;
-        }
+        } else return value <= 0;
     }
 
 

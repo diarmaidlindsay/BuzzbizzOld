@@ -33,7 +33,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 /**
  * Created by Diarmaid Lindsay on 2016/03/10.
@@ -66,12 +65,6 @@ public class LoginActivityTest {
         onView(withId(R.id.et_password)).perform(clearText(), typeText("demouser5"), closeSoftKeyboard());
         //enter local server
         onView(withId(R.id.et_local_server)).perform(clearText(), typeText("192.168.1.230"), closeSoftKeyboard());
-        //click on ssid field
-        onView(withId(R.id.et_ssid)).perform(clearText(), click());
-        //click はい on dialog to auto-populate ssid
-        onView(withText("はい")).perform(click());
-        //verify that the ssid field was populated
-        onView(withId(R.id.et_ssid)).check(matches(not(withText("")))).perform(closeSoftKeyboard());
         //enter remote server
         onView(withId(R.id.et_remote_server)).perform(clearText(), typeText("system-onpre.pulseanddecibels.jp"), closeSoftKeyboard());
         //click login button
