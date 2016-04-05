@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -70,7 +71,7 @@ public class MainService extends Service {
 	}
 
 	static ScreenStates CurentScreenState = ScreenStates.COVER;
-	private String LOG_TAG = getClass().getSimpleName();
+	private static String LOG_TAG = MainService.class  .getSimpleName();
 
 
 
@@ -172,9 +173,30 @@ public class MainService extends Service {
 		}
 	}
 
+	static AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
 
+		@Override
+		public void onAudioFocusChange(int focusChange) {
+			//do nothing
+		}
+	};
 
+	private static void getAudioFocus(Context context) {
+		AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
+		// Request audio focus for playback
+		am.requestAudioFocus(mOnAudioFocusChangeListener,
+				// Voice call Stream
+				AudioManager.STREAM_VOICE_CALL,
+				// Request permanent focus.
+				AudioManager.AUDIOFOCUS_GAIN);
+	}
+
+	private static void releaseAudioFocus(Context context) {
+		AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+		am.abandonAudioFocus(mOnAudioFocusChangeListener);
+	}
 
 	/** 本サービスの常駐化確認用フラグ */
 	private static boolean stayServiceFlag = false;
@@ -341,6 +363,8 @@ public class MainService extends Service {
 
 //		// ミュート・スピーカーボタンUIを使用可能に設定
 		KeypadScreen.startUsingUiMuteAndSpeakerButton();
+
+		getAudioFocus(me);
 	}
 
 
@@ -387,6 +411,8 @@ public class MainService extends Service {
 		ProximitySensorControl.stop(me.getApplicationContext());
 
 		LIB_OP.setCurrentCall(null);
+
+		releaseAudioFocus(me);
 	}
 
 
